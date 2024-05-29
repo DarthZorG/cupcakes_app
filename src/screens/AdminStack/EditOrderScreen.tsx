@@ -22,6 +22,7 @@ import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
 import { AdminStackParamList } from '../../navigation/AdminStackNavigator';
+import CustomButton from '../../components/CustomButton';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditOrder'>;
 
@@ -36,6 +37,9 @@ function EditOrderScreen(props: PropsType): JSX.Element {
         style={styles.scrollview}>
         <View style={styles.innerContainer}></View>
       </ScrollView>
+      <View>
+        <CustomButton title="Salvar" onPress={() => {}} />
+      </View>
     </SafeAreaView>
   );
 }

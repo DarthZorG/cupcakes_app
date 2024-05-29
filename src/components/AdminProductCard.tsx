@@ -9,15 +9,15 @@ import {
   Image,
   Text,
 } from 'react-native';
-import {BLACK, GRAY, LIGHT_BLUE, WHITE} from '../config/colors';
+import {BLACK, GRAY, LIGHT_BLUE, RED, WHITE} from '../config/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BoldText, DefaultText} from './StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import QuantityInput from './QuatityInput';
 
-export type CartItemCardProps = {};
+export type AdminProductCardProps = {};
 
-const CartItemCard = (props: CartItemCardProps): JSX.Element => {
+const AdminProductCard = (props: AdminProductCardProps): JSX.Element => {
   return (
     <View style={[styles.cardContainer]}>
       <View style={styles.imageContainer}>
@@ -33,18 +33,32 @@ const CartItemCard = (props: CartItemCardProps): JSX.Element => {
             <DefaultText style={styles.flavor}>
               {'Sabor: Chocolate com cereja'}
             </DefaultText>
+            <DefaultText style={styles.flavor}>{'Preço: R$ 4,50'}</DefaultText>
             <DefaultText style={styles.badge}>{'Sem açucar'}</DefaultText>
           </View>
         </View>
         <View style={styles.priceContainer}>
-          <BoldText style={styles.price}>{'R$ 4,50'}</BoldText>
-          <QuantityInput style={{marginRight: 10}} />
           <TouchableOpacity onPress={() => {}}>
-            <Material
-              style={{alignItems: 'center', color: '#FF0000'}}
-              name={'trash-can-outline'}
-              size={18}
-            />
+            <View style={styles.buttonContainer}>
+              <Material
+                style={{alignItems: 'center', color: LIGHT_BLUE}}
+                name={'cookie-edit-outline'}
+                size={15}
+              />
+              <DefaultText style={styles.edit}>{'Edit'}</DefaultText>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {}}>
+            <View style={styles.buttonContainer}>
+              <Material
+                style={{alignItems: 'center', color: RED}}
+                name={'trash-can-outline'}
+                size={15}
+              />
+              <DefaultText style={styles.delete}>
+                {'Remover produto'}
+              </DefaultText>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -52,7 +66,7 @@ const CartItemCard = (props: CartItemCardProps): JSX.Element => {
   );
 };
 
-export default CartItemCard;
+export default AdminProductCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -77,7 +91,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     aspectRatio: 1,
-    height: 100,
+    height: 110,
   },
   infoContainer: {
     flex: 1,
@@ -107,6 +121,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 10,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingLeft: 14,
+  },
   price: {
     fontSize: 16,
     paddingRight: 10,
@@ -123,6 +143,14 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 4,
     paddingHorizontal: 8,
+  },
+  delete: {
+    color: RED,
+    fontSize: 10,
+  },
+  edit: {
+    color: LIGHT_BLUE,
+    fontSize: 10,
   },
   productName: {},
   flavor: {},

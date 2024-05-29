@@ -20,7 +20,9 @@ import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {CartStackParamList} from '../../navigation/CartStackNAvigator';
 import CartItemCard from '../../components/CartItemCard';
-import { WHITE } from '../../config/colors';
+import {GRAY, WHITE} from '../../config/colors';
+import CustomButton from '../../components/CustomButton';
+import {BoldText, DefaultText} from '../../components/StyledTexts';
 
 type PropsType = NativeStackScreenProps<CartStackParamList, 'CartHome'>;
 
@@ -38,7 +40,24 @@ function CartMainScreen(props: PropsType): JSX.Element {
           <CartItemCard />
         </View>
       </ScrollView>
-      <View style={styles.bottomResume}></View>
+      <View style={styles.bottomResume}>
+        <View style={styles.resumeContainer}>
+          <View style={styles.resumeLine}>
+            <DefaultText>Total de itens:</DefaultText>
+            <BoldText style={styles.leftColumn}>3</BoldText>
+          </View>
+          <View style={styles.resumeLine}>
+            <DefaultText>Total da compra:</DefaultText>
+            <BoldText style={styles.leftColumn}>R$ 13.50</BoldText>
+          </View>
+        </View>
+        <CustomButton
+          title="Finalizar pedido"
+          onPress={() => {
+            props.navigation.navigate('FinalizeOrder');
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -56,7 +75,24 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   bottomResume: {
-    height: 100,
+    borderTopColor: GRAY,
+    borderTopWidth: 1,
+  },
+  leftColumn: {
+    minWidth: 80,
+    textAlign: 'right',
+  },
+  resumeContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    paddingVertical: 10,
+  },
+  resumeLine: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'baseline',
   },
 });
 

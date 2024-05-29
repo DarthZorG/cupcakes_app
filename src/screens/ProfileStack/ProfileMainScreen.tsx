@@ -21,6 +21,8 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
+import CustomButton from '../../components/CustomButton';
+import { BoldText } from '../../components/StyledTexts';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'ProfileHome'>;
 
@@ -33,7 +35,9 @@ function ProfileMainScreen(props: PropsType): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}></View>
+      <View style={styles.pageHeader}>
+      <BoldText>Menu Perfil</BoldText>
+      </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
@@ -62,13 +66,12 @@ function ProfileMainScreen(props: PropsType): JSX.Element {
               props.navigation.navigate('MyFavorites');
             }}
           />
-          <MenuItem
-            title="Sair da conta"
-            onPress={() => {}}
-            hasRightArrow={false}
-          />
+         
         </View>
       </ScrollView>
+      <View>
+        <CustomButton title="Sair da conta" onPress={() => {}} />
+      </View>
     </SafeAreaView>
   );
 }

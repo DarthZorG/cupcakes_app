@@ -22,13 +22,14 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {BLACK, LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
-import { AdminStackParamList } from '../../navigation/AdminStackNavigator';
+import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import AdminProductCard from '../../components/AdminProductCard';
+import SearchField from '../../components/SearchField';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Products'>;
 
 function ProductsScreen(props: PropsType): JSX.Element {
-  
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => {
@@ -38,27 +39,28 @@ function ProductsScreen(props: PropsType): JSX.Element {
             onPress={() => {
               props.navigation.navigate('EditProduct');
             }}>
-            <Material
-              style={{color: BLACK}}
-              name={'cookie-plus'}
-              size={20}
-            />
+            <Material style={{color: BLACK}} name={'cookie-plus'} size={20} />
           </TouchableOpacity>
         );
       },
     });
   }, [props.navigation]);
-  
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.pageHeader}>
-        <BoldText>Produtos</BoldText>
+        <BoldText style={styles.headerText}>Produtos</BoldText>
       </View>
+      <SearchField placeHolder="procura.." />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
-        <View style={styles.innerContainer}></View>
+        <View style={styles.innerContainer}>
+          <AdminProductCard />
+          <AdminProductCard />
+          <AdminProductCard />
+          <AdminProductCard />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -78,12 +80,14 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   pageHeader: {
-    height: 60,
-    backgroundColor: LIGHT_BLUE,
+    backgroundColor: WHITE,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerText: {
+    fontSize: 20,
   },
 });
 

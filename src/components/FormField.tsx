@@ -1,0 +1,58 @@
+import React from 'react';
+import {
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+  Image,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from 'react-native';
+import {BLACK, BLUE, GRAY, WHITE} from '../config/colors';
+import {BoldText} from './StyledTexts';
+
+export type FormFieldProps = {
+  style: StyleProp<ViewStyle>;
+  title: string;
+  value: string;
+};
+
+const FormField = (props: FormFieldProps): JSX.Element => {
+  return (
+    <View style={[styles.container, props.style]}>
+      <BoldText style={styles.label}>{props.title}</BoldText>
+      <TextInput
+        style={styles.input}
+        value={props.value}
+        onChangeText={() => {}}
+      />
+    </View>
+  );
+};
+
+export default FormField;
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  label: {
+    fontSize: 15,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: GRAY,
+    backgroundColor: WHITE,
+    borderRadius: 8,
+    color: BLACK,
+    width: '100%',
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+  },
+});

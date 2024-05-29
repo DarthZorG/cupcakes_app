@@ -18,19 +18,19 @@ import {
 
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
+import { AdminStackParamList } from '../../navigation/AdminStackNavigator';
 import CustomButton from '../../components/CustomButton';
 
-type PropsType = NativeStackScreenProps<ProfileStackParamList, 'EditAddress'>;
+type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditOrder'>;
 
-function EditAddressScreen(props: PropsType): JSX.Element {
+function FinalizeOrderScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.pageHeader}>
-        <BoldText>Edit address</BoldText>
+        <BoldText>Finalizar Pedido</BoldText>
       </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -38,7 +38,7 @@ function EditAddressScreen(props: PropsType): JSX.Element {
         <View style={styles.innerContainer}></View>
       </ScrollView>
       <View>
-        <CustomButton title="Salvar" onPress={() => {}} />
+        <CustomButton title="Finalizar" onPress={() => {}} />
       </View>
     </SafeAreaView>
   );
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditAddressScreen;
+export default FinalizeOrderScreen;

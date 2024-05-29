@@ -22,6 +22,7 @@ import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
+import CustomButton from '../../components/CustomButton';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyProfile'>;
 
@@ -36,6 +37,9 @@ function MyProfileScreen(props: PropsType): JSX.Element {
         style={styles.scrollview}>
         <View style={styles.innerContainer}></View>
       </ScrollView>
+      <View>
+        <CustomButton title="Salvar" onPress={() => {}} />
+      </View>
     </SafeAreaView>
   );
 }

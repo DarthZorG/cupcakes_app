@@ -99,7 +99,7 @@ const BottomTabNavigator = (): JSX.Element => {
         name="ProfileStack"
         component={isAuthenticated ? ProfileStackNavigator : AuthStackNavigator}
         options={{
-          tabBarLabel: 'PROFILO',
+          tabBarLabel: 'PERFIL',
           tabBarIcon: ({focused}) => (
             <Material
               name={focused ? 'account-circle' : 'account-circle-outline'}
