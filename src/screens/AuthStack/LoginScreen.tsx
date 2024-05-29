@@ -19,6 +19,10 @@ import {
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '../../navigation/AuthStackNavigator';
+import CustomButton from '../../components/CustomButton';
+import FormLabel from '../../components/FormLabel';
+import {WHITE} from '../../config/colors';
+import FormField from '../../components/FormField';
 
 type PropsType = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -27,27 +31,46 @@ function LoginScreen(props: PropsType): JSX.Element {
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    flex:1,
+    
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}></View>
-      </ScrollView>
+
+      <View style={styles.innerContainer}>
+        <FormField title="E-mail" value="" />
+        <FormField title="Password" value="" />
+        <CustomButton
+          title="Esqueceu a senha ?"
+          onPress={() => {}}
+          textStyle={{fontSize: 12}}
+        />
+        <CustomButton
+          title="Não tem conta ?"
+          onPress={() => {
+            props.navigation.navigate('Register');
+          }}
+          textStyle={{fontSize: 12}}
+        />
+      </View>
+      <View>
+        <CustomButton title="LOGIN" onPress={() => {}} />
+      </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  innerContainer: {
+    backgroundColor: WHITE,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    paddingHorizontal: 30,
+    
+  },
+});
 
 export default LoginScreen;

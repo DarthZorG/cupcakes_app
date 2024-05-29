@@ -21,59 +21,32 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
-import CustomButton from '../../components/CustomButton';
 import {BoldText} from '../../components/StyledTexts';
+import CustomButton from '../../components/CustomButton';
+import FormField from '../../components/FormField';
 import PageHeader from '../../components/PageHeader';
+import FormLabel from '../../components/FormLabel';
 
-type PropsType = NativeStackScreenProps<ProfileStackParamList, 'ProfileHome'>;
+type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyProfile'>;
 
-function ProfileMainScreen(props: PropsType): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function RegisterScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
-      <PageHeader title="Menu Perfil" />
+      <PageHeader title="Criar nova conta" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <MenuItem
-            title="Meus dados"
-            onPress={() => {
-              props.navigation.navigate('MyProfile');
-            }}
-          />
-          <MenuItem
-            title="Meus endereços"
-            onPress={() => {
-              props.navigation.navigate('MyAddresses');
-            }}
-          />
-          <MenuItem
-            title="Meus pedidos"
-            onPress={() => {
-              props.navigation.navigate('MyOrders');
-            }}
-          />
-          <MenuItem
-            title="Meus favoritos"
-            onPress={() => {
-              props.navigation.navigate('MyFavorites');
-            }}
-          />
+          <FormField title="E-mail" value="" />
+          <FormField title="Password" value="" />
+          <FormField title="Conferma Password" value="" />
+          <FormField title="Nome" value="Mauro" />
+          <FormField title="Sobrenome" value="Minoro" />
+          <FormField title="Telefone" value="(41) 0000-0000" />
         </View>
       </ScrollView>
       <View>
-        <CustomButton
-          title="Sair da conta"
-          onPress={() => {
-            props.navigation.navigate('Login');
-          }}
-        />
+        <CustomButton title="Criar a minha conta!" onPress={() => {}} />
       </View>
     </SafeAreaView>
   );
@@ -102,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileMainScreen;
+export default RegisterScreen;
