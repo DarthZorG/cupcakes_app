@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   View,
@@ -9,66 +9,60 @@ import {
   Image,
   Text,
 } from 'react-native';
-import {BLACK, GRAY, LIGHT_BLUE, WHITE} from '../config/colors';
+import {BLACK, BLUE, GRAY, LIGHT_BLUE, WHITE} from '../config/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BoldText, DefaultText} from './StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import QuantityInput from './QuatityInput';
+import CartItemCard from './CartItemCard';
 
-export type CartItemCardProps = {
-  allowEdit: boolean;
+export type OrderCardProps = {
+  showDetails?: boolean;
 };
 
-const CartItemCard = (props: CartItemCardProps): JSX.Element => {
-  const allowEdit = props.allowEdit ?? true;
+const OrderCard = (props: OrderCardProps): JSX.Element => {
+  const showDetails = props.showDetails ?? false;
 
   return (
     <View style={[styles.cardContainer]}>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/images/cupcake.jpg')}
-          style={styles.image}
-        />
-      </View>
       <View style={styles.infoContainer}>
         <View style={styles.dataContainer}>
           <View style={styles.textContainer}>
-            <BoldText style={styles.productName}>{'Floresta negra'}</BoldText>
+            <BoldText style={styles.productName}>
+              {'Pedido del: 29/05/2024'}
+            </BoldText>
+            <DefaultText style={styles.flavor}>{'Valor: R$ 40,00'}</DefaultText>
             <DefaultText style={styles.flavor}>
-              {'Sabor: Chocolate com cereja'}
+              {'Entrega: Retirar na loja'}
             </DefaultText>
-            <DefaultText style={styles.badge}>{'Sem açucar'}</DefaultText>
+            <DefaultText style={styles.flavor}>
+              {'Status: Pedido entregue'}
+            </DefaultText>
           </View>
         </View>
-        <View style={styles.priceContainer}>
-          <BoldText style={styles.price}>{'R$ 4,50'}</BoldText>
-          {allowEdit ? (
-            <Fragment>
-              <QuantityInput style={{marginRight: 10}} />
-              <TouchableOpacity onPress={() => {}}>
-                <Material
-                  style={{alignItems: 'center', color: '#FF0000'}}
-                  name={'trash-can-outline'}
-                  size={18}
-                />
-              </TouchableOpacity>
-            </Fragment>
-          ) : (
-            <BoldText>Quantity: 1</BoldText>
-          )}
-        </View>
+        {!showDetails ? (
+          <View style={styles.priceContainer}>
+            <TouchableOpacity onPress={() => {}}>
+              <BoldText style={styles.price}>{'Detalhes do pedido'}</BoldText>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.detailsContainer}>
+            <CartItemCard allowEdit={false} />
+            <CartItemCard allowEdit={false} />
+          </View>
+        )}
       </View>
     </View>
   );
 };
 
-export default CartItemCard;
+export default OrderCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
     marginTop: 10,
     width: '100%',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
     borderLeftWidth: 1,
@@ -87,7 +81,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     aspectRatio: 1,
-    height: 100,
+    height: 140,
   },
   infoContainer: {
     flex: 1,
@@ -113,13 +107,22 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     paddingRight: 10,
-    paddingBottom: 10,
+    paddingBottom: 4,
+  },
+  detailsContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 5,
+    paddingBottom: 5,
   },
   price: {
-    fontSize: 16,
+    fontSize: 14,
     paddingRight: 10,
+    color: BLUE,
   },
   image: {
     width: '100%',

@@ -22,6 +22,7 @@ import {HomeStackParamList} from '../../navigation/HomeStackNavigator';
 import {WHITE} from '../../config/colors';
 import SearchField from '../../components/SearchField';
 import ProductCard from '../../components/ProductCard';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
@@ -30,7 +31,7 @@ function MyFavoritesScreen(props: PropsType): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      
+      <PageHeader title="Os Meus Favoritos" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>

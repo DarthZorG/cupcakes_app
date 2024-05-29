@@ -22,6 +22,7 @@ import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import { BoldText } from '../../components/StyledTexts';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'AdminHome'>;
 
@@ -34,9 +35,7 @@ function AdminMainScreen(props: PropsType): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-       <View style={styles.pageHeader}>
-      <BoldText>Menu Admin</BoldText>
-      </View>
+      <PageHeader title="Area administrativa" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
@@ -54,6 +53,7 @@ function AdminMainScreen(props: PropsType): JSX.Element {
             }}
           />
         </View>
+        
       </ScrollView>
     </SafeAreaView>
   );

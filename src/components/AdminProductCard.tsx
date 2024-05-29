@@ -121,12 +121,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 10,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingLeft: 14,
-  },
+ 
   price: {
     fontSize: 16,
     paddingRight: 10,
@@ -143,6 +138,12 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 4,
     paddingHorizontal: 8,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingLeft: 14,
   },
   delete: {
     color: RED,

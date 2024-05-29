@@ -24,6 +24,7 @@ import {BLACK, LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyAddresses'>;
 
@@ -56,9 +57,7 @@ function MyAddressesScreen(props: PropsType): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}>
-        <BoldText>{'Endereços'}</BoldText>
-      </View>
+      <PageHeader title="Os Meus Endereços" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>

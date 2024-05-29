@@ -21,21 +21,29 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
-import { AdminStackParamList } from '../../navigation/AdminStackNavigator';
+import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import AdminOrderCard from '../../components/AdminOrderCard';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Orders'>;
 
 function OrdersScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}>
-        <BoldText>Pedidos</BoldText>
-      </View>
+      <PageHeader title="Todos os pedidos" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
-        <View style={styles.innerContainer}></View>
+        <View style={styles.innerContainer}>
+          <AdminOrderCard
+            showDetails={true}
+            onEdit={() => {
+              props.navigation.navigate('EditOrder');
+            }}
+          />
+          <AdminOrderCard />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

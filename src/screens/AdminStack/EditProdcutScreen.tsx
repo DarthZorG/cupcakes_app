@@ -28,15 +28,14 @@ import {BoldText} from '../../components/StyledTexts';
 import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
 import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditProduct'>;
 
 function EditProductScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}>
-        <BoldText>Edit product</BoldText>
-      </View>
+      <PageHeader title="Editar Produto" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>

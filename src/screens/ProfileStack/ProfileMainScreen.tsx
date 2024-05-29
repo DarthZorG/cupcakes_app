@@ -23,6 +23,7 @@ import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import CustomButton from '../../components/CustomButton';
 import { BoldText } from '../../components/StyledTexts';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'ProfileHome'>;
 
@@ -35,9 +36,7 @@ function ProfileMainScreen(props: PropsType): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}>
-      <BoldText>Menu Perfil</BoldText>
-      </View>
+      <PageHeader title="Menu Perfil" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>

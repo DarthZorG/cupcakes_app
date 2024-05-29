@@ -26,6 +26,7 @@ import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import AdminProductCard from '../../components/AdminProductCard';
 import SearchField from '../../components/SearchField';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Products'>;
 
@@ -48,9 +49,7 @@ function ProductsScreen(props: PropsType): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}>
-        <BoldText style={styles.headerText}>Produtos</BoldText>
-      </View>
+      <PageHeader title="Gerenciador de Produtos" />
       <SearchField placeHolder="procura.." />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"

@@ -22,19 +22,24 @@ import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
 import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
+import OrderCard from '../../components/OrderCard';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyOrders'>;
 
 function MyOrdersScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}>
-        <BoldText>Meus pedidos</BoldText>
-      </View>
+      <PageHeader title="Os Meus Pedidos" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
-        <View style={styles.innerContainer}></View>
+
+        <View style={styles.innerContainer}>
+          <OrderCard showDetails={true}/>
+          <OrderCard />
+
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
