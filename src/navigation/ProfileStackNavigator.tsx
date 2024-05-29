@@ -7,9 +7,19 @@ import {baseHeaderStyle} from '../config/styles';
 import {useSelector} from 'react-redux';
 import {StoreState} from '../store/reducers';
 import ProfileMainScreen from '../screens/ProfileStack/ProfileMainScreen';
+import MyOrdersScreen from '../screens/ProfileStack/MyOrdersScreen';
+import MyAddressesScreen from '../screens/ProfileStack/MyAddressesScreen';
+import EditAddressScreen from '../screens/ProfileStack/EditAddressesScreen';
+import MyProfileScreen from '../screens/ProfileStack/MyProfileScreen';
+import MyFavoritesScreen from '../screens/ProfileStack/MyFavoritesScreen';
 
 export type ProfileStackParamList = {
   ProfileHome: undefined;
+  MyOrders: undefined;
+  MyAddresses: undefined;
+  EditAddress: undefined;
+  MyProfile: undefined;
+  MyFavorites: undefined;
 };
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
@@ -21,6 +31,11 @@ const ProfileStackNavigator = (): JSX.Element => {
   return (
     <ProfileStack.Navigator screenOptions={baseHeaderStyle}>
       <ProfileStack.Screen name={'ProfileHome'} component={ProfileMainScreen} />
+      <ProfileStack.Screen name={'MyOrders'} component={MyOrdersScreen} />
+      <ProfileStack.Screen name={'MyAddresses'} component={MyAddressesScreen} />
+      <ProfileStack.Screen name={'EditAddress'} component={EditAddressScreen} />
+      <ProfileStack.Screen name={'MyProfile'} component={MyProfileScreen} />
+      <ProfileStack.Screen name={'MyFavorites'} component={MyFavoritesScreen} />
     </ProfileStack.Navigator>
   );
 };

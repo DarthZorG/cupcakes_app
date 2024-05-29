@@ -12,6 +12,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -19,54 +20,55 @@ import {
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
-import {LIGHT_BLUE, WHITE} from '../../config/colors';
+import {BLACK, LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
+import {BoldText} from '../../components/StyledTexts';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
-type PropsType = NativeStackScreenProps<ProfileStackParamList, 'ProfileHome'>;
+type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyAddresses'>;
 
-function ProfileMainScreen(props: PropsType): JSX.Element {
+function MyAddressesScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  React.useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => {
+        return (
+          <TouchableOpacity
+            testID="navigate_add_address"
+            onPress={() => {
+              props.navigation.navigate('EditAddress');
+            }}>
+            <Material
+              style={{color: BLACK}}
+              name={'map-marker-plus'}
+              size={20}
+            />
+          </TouchableOpacity>
+        );
+      },
+    });
+  }, [props.navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}></View>
+      <View style={styles.pageHeader}>
+        <BoldText>{'Endereços'}</BoldText>
+      </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
           <MenuItem
-            title="Meus dados"
+            title="Rua antonio de Padua, 400"
+            description="80010-000 Centro Civico, Curitiba PR"
             onPress={() => {
-              props.navigation.navigate('MyProfile');
-            }}
-          />
-          <MenuItem
-            title="Meus endereços"
-            onPress={() => {
-              props.navigation.navigate('MyAddresses');
-            }}
-          />
-          <MenuItem
-            title="Meus pedidos"
-            onPress={() => {
-              props.navigation.navigate('MyOrders');
-            }}
-          />
-          <MenuItem
-            title="Meus favoritos"
-            onPress={() => {
-              props.navigation.navigate('MyFavorites');
-            }}
-          />
-          <MenuItem
-            title="Sair da conta"
-            onPress={() => {}}
-            hasRightArrow={false}
-          />
+              props.navigation.navigate('EditAddress');
+            }}></MenuItem>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -96,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileMainScreen;
+export default MyAddressesScreen;

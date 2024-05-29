@@ -18,38 +18,25 @@ import {
 
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
+import {HomeStackParamList} from '../../navigation/HomeStackNavigator';
 import {WHITE} from '../../config/colors';
-import MenuItem from '../../components/MenuItem';
+import SearchField from '../../components/SearchField';
+import ProductCard from '../../components/ProductCard';
 
-type PropsType = NativeStackScreenProps<AdminStackParamList, 'AdminHome'>;
+type PropsType = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
-function AdminMainScreen(props: PropsType): JSX.Element {
+function MyFavoritesScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}></View>
+      
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <MenuItem
-            title="Produtos"
-            onPress={() => {
-              props.navigation.navigate('Products');
-            }}
-          />
-          <MenuItem
-            title="Pedidos"
-            onPress={() => {
-              props.navigation.navigate('Orders');
-            }}
-          />
+          <ProductCard/>
+          <ProductCard/>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -64,14 +51,10 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     backgroundColor: WHITE,
-    flex: 1,
   },
   innerContainer: {
     backgroundColor: WHITE,
   },
-  pageHeader: {
-    height: 100,
-  },
 });
 
-export default AdminMainScreen;
+export default MyFavoritesScreen;

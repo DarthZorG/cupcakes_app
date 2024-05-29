@@ -18,39 +18,23 @@ import {
 
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
-import {WHITE} from '../../config/colors';
+import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
+import {LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
+import {BoldText} from '../../components/StyledTexts';
 
-type PropsType = NativeStackScreenProps<AdminStackParamList, 'AdminHome'>;
+type PropsType = NativeStackScreenProps<ProfileStackParamList, 'EditAddress'>;
 
-function AdminMainScreen(props: PropsType): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function EditAddressScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.pageHeader}></View>
+      <View style={styles.pageHeader}>
+        <BoldText>Edit address</BoldText>
+      </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
-        <View style={styles.innerContainer}>
-          <MenuItem
-            title="Produtos"
-            onPress={() => {
-              props.navigation.navigate('Products');
-            }}
-          />
-          <MenuItem
-            title="Pedidos"
-            onPress={() => {
-              props.navigation.navigate('Orders');
-            }}
-          />
-        </View>
+        <View style={styles.innerContainer}></View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -70,8 +54,13 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   pageHeader: {
-    height: 100,
+    height: 60,
+    backgroundColor: LIGHT_BLUE,
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-export default AdminMainScreen;
+export default EditAddressScreen;
