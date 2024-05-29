@@ -19,35 +19,45 @@ import {
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {CartStackParamList} from '../../navigation/CartStackNAvigator';
+import CartItemCard from '../../components/CartItemCard';
+import { WHITE } from '../../config/colors';
 
 type PropsType = NativeStackScreenProps<CartStackParamList, 'CartHome'>;
 
 function CartMainScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}></View>
+        style={styles.scrollview}>
+        <View style={styles.innerContainer}>
+          <CartItemCard />
+          <CartItemCard />
+          <CartItemCard />
+        </View>
       </ScrollView>
+      <View style={styles.bottomResume}></View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: WHITE,
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  scrollview: {
+    backgroundColor: WHITE,
+  },
+  innerContainer: {
+    backgroundColor: WHITE,
+  },
+  bottomResume: {
+    height: 100,
+  },
+});
 
 export default CartMainScreen;

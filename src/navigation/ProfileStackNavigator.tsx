@@ -20,16 +20,7 @@ const ProfileStackNavigator = (): JSX.Element => {
   });
   return (
     <ProfileStack.Navigator screenOptions={baseHeaderStyle}>
-      <ProfileStack.Screen
-        options={{
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-        }}
-        name={'ProfileHome'}
-        component={ProfileMainScreen}
-      />
+      <ProfileStack.Screen name={'ProfileHome'} component={ProfileMainScreen} />
     </ProfileStack.Navigator>
   );
 };

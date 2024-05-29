@@ -20,16 +20,7 @@ const AdminStackNavigator = (): JSX.Element => {
   });
   return (
     <AdminStack.Navigator screenOptions={baseHeaderStyle}>
-      <AdminStack.Screen
-        options={{
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-        }}
-        name={'AdminHome'}
-        component={AdminMainScreen}
-      />
+      <AdminStack.Screen name={'AdminHome'} component={AdminMainScreen} />
     </AdminStack.Navigator>
   );
 };

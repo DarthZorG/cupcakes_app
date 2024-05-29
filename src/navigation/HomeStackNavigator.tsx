@@ -20,16 +20,7 @@ const HomeStackNavigator = (): JSX.Element => {
   });
   return (
     <HomeStack.Navigator screenOptions={baseHeaderStyle}>
-      <HomeStack.Screen
-        options={{
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-        }}
-        name={'Home'}
-        component={HomeScreen}
-      />
+      <HomeStack.Screen name={'Home'} component={HomeScreen} />
     </HomeStack.Navigator>
   );
 };

@@ -3,8 +3,6 @@ import {Platform, StyleProp, ViewStyle, Animated} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStackNavigator from './HomeStackNavigator';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {RouteProp} from '@react-navigation/native';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -34,14 +32,6 @@ const getTabBarStyle = (
   tabStyle.elevation = 0;
   tabStyle.shadowOffset = {width: 0, height: 0};
 
-  //hiding the tabBar when the AuthStack is visible has been removed from here,
-  //as the AuthStackNavigator has now a wrapper that does show and hide the tabBar
-  // as needed using useLayoutEffect.
-
-  /* switch  (routeName) {
-    case 'Profile':
-      tabStyle.display = 'none';
-  } */
   return tabStyle;
 };
 
@@ -65,10 +55,10 @@ const BottomTabNavigator = (): JSX.Element => {
         name="HomeStack"
         component={HomeStackNavigator}
         options={{
-          tabBarLabel: 'HOME',
+          tabBarLabel: 'LOJA',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name={focused ? 'home' : 'home-outline'}
+            <Material
+              name={focused ? 'store' : 'store-outline'}
               color={focused ? BLACK : GRAY}
               size={24}
             />
@@ -82,7 +72,7 @@ const BottomTabNavigator = (): JSX.Element => {
           tabBarLabel: 'CARRINHO',
           tabBarIcon: ({focused}) => (
             <Material
-              name={focused ? 'food-drumstick' : 'food-drumstick-outline'}
+              name={focused ? 'cart' : 'cart-outline'}
               color={focused ? BLACK : GRAY}
               size={24}
             />
@@ -96,8 +86,8 @@ const BottomTabNavigator = (): JSX.Element => {
         options={{
           tabBarLabel: 'ADMIN',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name={focused ? 'cart' : 'cart-outline'}
+            <Material
+              name={focused ? 'cog' : 'cog-outline'}
               color={focused ? BLACK : GRAY}
               size={24}
             />
@@ -111,8 +101,8 @@ const BottomTabNavigator = (): JSX.Element => {
         options={{
           tabBarLabel: 'PROFILO',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name={focused ? 'flame' : 'flame-outline'}
+            <Material
+              name={focused ? 'account-circle' : 'account-circle-outline'}
               color={focused ? BLACK : GRAY}
               size={24}
             />

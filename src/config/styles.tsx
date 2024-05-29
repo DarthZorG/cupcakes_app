@@ -10,15 +10,15 @@ export const baseHeaderStyle: any = {
     width: '100%',
   },
   headerBackTitleVisible: false,
-  headerTintColor: WHITE,
+  headerTintColor: BLACK,
   headerStyle: {
-    backgroundColor: BLACK,
+    backgroundColor: WHITE,
     height: 20,
   },
   title: 'CUPCAKES STORE',
   headerShadowVisible: false,
   headerBackTitleStyle: {
-    color: WHITE,
+    color: BLACK,
   },
   headerBackVisible: true,
 

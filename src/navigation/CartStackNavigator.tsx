@@ -20,16 +20,7 @@ const CartStackNavigator = (): JSX.Element => {
   });
   return (
     <CartStack.Navigator screenOptions={baseHeaderStyle}>
-      <CartStack.Screen
-        options={{
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-        }}
-        name={'CartHome'}
-        component={CartMainScreen}
-      />
+      <CartStack.Screen name={'CartHome'} component={CartMainScreen} />
     </CartStack.Navigator>
   );
 };

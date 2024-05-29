@@ -19,6 +19,8 @@ import {
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
+import {WHITE} from '../../config/colors';
+import MenuItem from '../../components/MenuItem';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'AdminHome'>;
 
@@ -30,24 +32,36 @@ function AdminMainScreen(props: PropsType): JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.pageHeader}></View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}></View>
+        style={styles.scrollview}>
+        <View style={styles.innerContainer}>
+          <MenuItem title='Produtos' />
+          <MenuItem title='Pedidos' />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: WHITE,
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  scrollview: {
+    backgroundColor: WHITE,
+    flex: 1,
+  },
+  innerContainer: {
+    backgroundColor: WHITE,
+  },
+  pageHeader: {
+    height: 100,
+  },
+});
 
 export default AdminMainScreen;

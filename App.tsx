@@ -67,11 +67,11 @@ function MainApp(): JSX.Element {
   };
   return (
     <NavigationContainer>
-      <StatusBar
+   {/*   <StatusBar
         barStyle="light-content"
         translucent
         backgroundColor="transparent"
-      />
+  /> */}
       <BottomTabNavigator />
     </NavigationContainer>
   );

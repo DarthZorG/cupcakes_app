@@ -19,35 +19,42 @@ import {
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../../navigation/HomeStackNavigator';
+import {WHITE} from '../../config/colors';
+import SearchField from '../../components/SearchField';
+import ProductCard from '../../components/ProductCard';
 
 type PropsType = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 function HomeScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+    <SafeAreaView style={styles.container}>
+      <SearchField placeHolder="O que está procurando?" />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}></View>
+        style={styles.scrollview}>
+        <View style={styles.innerContainer}>
+          <ProductCard/>
+          <ProductCard/>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: WHITE,
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  scrollview: {
+    backgroundColor: WHITE,
+  },
+  innerContainer: {
+    backgroundColor: WHITE,
+  },
+});
 
 export default HomeScreen;
