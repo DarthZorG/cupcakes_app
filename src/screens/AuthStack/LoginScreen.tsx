@@ -23,6 +23,7 @@ import CustomButton from '../../components/CustomButton';
 import FormLabel from '../../components/FormLabel';
 import {WHITE} from '../../config/colors';
 import FormField from '../../components/FormField';
+import PageHeader from '../../components/PageHeader';
 
 type PropsType = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -39,6 +40,7 @@ function LoginScreen(props: PropsType): JSX.Element {
     <SafeAreaView style={backgroundStyle}>
 
       <View style={styles.innerContainer}>
+        <PageHeader title="Entre na sua conta" />
         <FormField title="E-mail" value="" />
         <FormField title="Password" value="" />
         <CustomButton
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     paddingHorizontal: 30,
-    
+
   },
 });
 
