@@ -4,7 +4,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -24,25 +24,52 @@ import FormLabel from '../../components/FormLabel';
 import {WHITE} from '../../config/colors';
 import FormField from '../../components/FormField';
 import PageHeader from '../../components/PageHeader';
+import AuthService from '../../services/AuthService';
+import {APIError} from '../../Errors/APIError';
+import {useDispatch} from 'react-redux';
+import {showAlert} from '../../store/actions/AlertActions';
 
 type PropsType = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 function LoginScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    flex:1,
-    
+    flex: 1,
+  };
+
+  const onLogin = async (): Promise<void> => {
+    try {
+      console.log(email, password);
+      const loginToken = await AuthService.login(email, password);
+    } catch (e: any) {
+      console.log(e);
+      if (e instanceof APIError) {
+        e.showAlert(dispatch);
+      } else {
+        dispatch(showAlert('Error', e.message));
+      }
+    }
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
-
       <View style={styles.innerContainer}>
         <PageHeader title="Entre na sua conta" />
-        <FormField title="E-mail" value="" />
-        <FormField title="Password" value="" />
+        <FormField
+          title="E-mail"
+          value={email}
+          onChange={text => setEmail(text)}
+        />
+        <FormField
+          title="Password"
+          value={password}
+          onChange={text => setPassword(text)}
+        />
         <CustomButton
           title="Esqueceu a senha ?"
           onPress={() => {}}
@@ -57,7 +84,7 @@ function LoginScreen(props: PropsType): JSX.Element {
         />
       </View>
       <View>
-        <CustomButton title="LOGIN" onPress={() => {}} />
+        <CustomButton title="LOGIN" onPress={onLogin} />
       </View>
     </SafeAreaView>
   );
@@ -71,7 +98,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     paddingHorizontal: 30,
-
   },
 });
 

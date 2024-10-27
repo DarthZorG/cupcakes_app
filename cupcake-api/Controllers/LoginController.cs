@@ -22,7 +22,7 @@ namespace cupcake_api.Controllers
 {
     [Route("identity/authorize")]
     [ApiController]
-   // [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Produces("application/json")]
     public class LoginController : ControllerBase
     {

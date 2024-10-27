@@ -13,9 +13,10 @@ import {BLACK, BLUE, GRAY, WHITE} from '../config/colors';
 import {BoldText} from './StyledTexts';
 
 export type FormFieldProps = {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   title: string;
   value: string;
+  onChange: (text: string) => void;
 };
 
 const FormField = (props: FormFieldProps): JSX.Element => {
@@ -25,7 +26,9 @@ const FormField = (props: FormFieldProps): JSX.Element => {
       <TextInput
         style={styles.input}
         value={props.value}
-        onChangeText={() => {}}
+        onChangeText={text => {
+          props.onChange(text);
+        }}
       />
     </View>
   );

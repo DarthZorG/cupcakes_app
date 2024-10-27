@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useMemo} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -17,97 +17,71 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import store from './src/store';
-import {Provider} from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
 import BottomTabNavigator from './src/navigation/BottomTabNavigator';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {hideAlert} from './src/store/actions/AlertActions';
+import AlertPopup from './src/components/AlertPopup';
+import {StoreState} from './src/store/reducers';
+import {AlertInfo} from './src/store/reducers/AlertReducer';
 
 function MainApp(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const dispatch = useDispatch();
+  const activeAlert = useSelector(
+    (state: StoreState): AlertInfo | null => state.alert.activeAlert,
+  );
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  return (
-    <NavigationContainer>
-   {/*   <StatusBar
-        barStyle="light-content"
-        translucent
-        backgroundColor="transparent"
-  /> */}
-      <BottomTabNavigator />
-    </NavigationContainer>
-  );
-  /*return (
-    
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+
+  const popupAlert = useMemo(() => {
+    const alertButtons = [...(activeAlert?.props?.buttons ?? [])];
+    if (activeAlert?.autoClose) {
+      // @ts-ignore
+      alertButtons.forEach((item: AlertPopupButton) => {
+        const oldOnPress = item.onPress;
+        item.onPress = (data: any) => {
+          dispatch(hideAlert());
+          if (oldOnPress != null) {
+            oldOnPress(data);
+          }
+        };
+      });
+      if (alertButtons.length === 0) {
+        alertButtons.push({
+          text: 'Ok',
+          onPress: () => {
+            dispatch(hideAlert());
+          },
+        });
+      }
+    }
+
+    return (
+      <AlertPopup
+        onRequestClose={() => {
+          dispatch(hideAlert());
+        }}
+        title=""
+        {...activeAlert?.props}
+        buttons={alertButtons}
+        visible={activeAlert != null}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );*/
+    );
+  }, [activeAlert]);
+  console.log(activeAlert);
+  
+  return (
+    <>
+      <NavigationContainer>
+        <BottomTabNavigator />
+      </NavigationContainer>
+      {popupAlert}
+    </>
+  );
 }
 
 function App(): JSX.Element {

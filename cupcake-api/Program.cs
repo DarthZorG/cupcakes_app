@@ -158,7 +158,7 @@ namespace cupcake_api
 
             // Add services to the container.
 
-          
+
 
 
             setupServices(builder.Services, builder.Configuration);
@@ -181,9 +181,10 @@ namespace cupcake_api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseHttpsRedirection();
-
+            else
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseAuthorization();
 
             app.MapControllers();
