@@ -9,6 +9,7 @@ using cupcacke_api.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace cupcacke_api
 {
@@ -101,7 +102,54 @@ namespace cupcacke_api
             });
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc(
+                    "v1",
+                    new OpenApiInfo
+                    {
+                        Version = typeof(Program).Assembly.GetName().Version.ToString(),
+                        Title = "CupCake APP API",
+                        Description = "Cupcake APP API",
+                        TermsOfService = new Uri("https://www.cupcake-app.com.br/terms"),
+                    }
+                );
+
+                options.SchemaFilter<Swagger.SwaggerIgnoreFilter>();
+                options.AddSecurityDefinition(
+                    "oauth2",
+                    new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.OAuth2,
+                        Flows = new OpenApiOAuthFlows
+                        {
+                            Password = new OpenApiOAuthFlow
+                            {
+                                TokenUrl = new Uri("/identity/authorize", UriKind.Relative),
+                            },
+                        },
+                        Scheme = "tomsAuth"
+                    }
+                );
+                options.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "oauth2"
+                                }
+                            },
+                            new string[] { }
+                        }
+                    }
+                );
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "cupcacke-api.xml");
+                options.IncludeXmlComments(filePath);
+            });
         }
 
         public static void Main(string[] args)

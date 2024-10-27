@@ -109,5 +109,10 @@ namespace cupcacke_api.Database
                 entity.ToTable("RoleClaims");
             });
         }
+        public DbSet<cupcacke_api.Models.Address> Address { get; set; } = default!;
+        public DbSet<cupcacke_api.Models.DeliveryMethod> DeliveryMethod { get; set; } = default!;
+        public DbSet<cupcacke_api.Models.Order> Order { get; set; } = default!;
+        public DbSet<cupcacke_api.Models.PaymentMethod> PaymentMethod { get; set; } = default!;
+        public DbSet<cupcacke_api.Models.Product> Product { get; set; } = default!;
     }
 }
