@@ -1,0 +1,6 @@
+@cupcake_api_HostAddress = http://localhost:5198
+
+GET {{cupcake_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
