@@ -72,17 +72,11 @@ export class APIError extends Error {
 
     if (this.apiResponse != null) {
       if (this.apiResponse.message !== '' && this.apiResponse.message != null) {
-        errorMessage += ': ' + this.apiResponse.message;
-      }
-      if (this.hasErrorType('shopify')) {
-        errorMessage = this.getErrorMessage('shopify');
+        errorMessage = this.apiResponse.message;
       }
       if (this.apiResponse.errors != null) {
         const keys = Object.keys(this.apiResponse.errors);
         keys.forEach((k, kIndex) => {
-          if (k === 'shopify') {
-            return;
-          }
           const errorInfo: JSX.Element[] = [];
           const errors: string[] | string = this.apiResponse!.errors![k];
           if (Array.isArray(errors)) {

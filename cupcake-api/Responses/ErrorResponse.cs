@@ -8,17 +8,20 @@ namespace cupcake_api.Responses
 {
     public class ErrorResponse
     {
-        public string Message { get; set; }
-        public int StatusCode { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string? Status { get; set; }
+        public string? Message { get; set; }
 
+        public Dictionary<string, List<string>>? Errors { get; set; }
 
-        public ErrorResponse(String message, int statusCode = 0)
+        public ErrorResponse(
+            String? Status,
+            String? Message,
+            Dictionary<string, List<string>>? Errors = null
+        )
         {
-            this.Message = message;
-            this.StatusCode = statusCode;
-            this.TimeStamp = DateTime.Now;
+            this.Status = Status;
+            this.Message = Message;
+            this.Errors = Errors;
         }
-        
     }
 }

@@ -44,8 +44,8 @@ function LoginScreen(props: PropsType): JSX.Element {
 
   const onLogin = async (): Promise<void> => {
     try {
-      console.log(email, password);
       const loginToken = await AuthService.login(email, password);
+      console.log(loginToken);
     } catch (e: any) {
       console.log(e);
       if (e instanceof APIError) {

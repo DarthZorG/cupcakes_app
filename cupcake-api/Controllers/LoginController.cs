@@ -60,7 +60,7 @@ namespace cupcake_api.Controllers
                 );
                 if (appUser == null || !appUser.Enabled)
                 {
-                    return Unauthorized(new ErrorResponse("Wrong username or password."));
+                    return Unauthorized(new ErrorResponse("Error", "Wrong username or password."));
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(
@@ -78,11 +78,11 @@ namespace cupcake_api.Controllers
                 else
                 {
                     //  ModelState.AddModelError(string.Empty, "Wrong username or password.");
-                    return Unauthorized(new ErrorResponse("Wrong username or password."));
+                    return Unauthorized(new ErrorResponse("Error", "Wrong username or password."));
                 }
             }
  
-            return BadRequest(new ErrorResponse("Unsupported grant type" + loginInfo.grant_type));
+            return BadRequest(new ErrorResponse("Error", "Unsupported grant type" + loginInfo.grant_type));
         }
 
         private async Task<AuthTokenResponse> BuildToken(AuthTokenRequest userInfo)
