@@ -5,23 +5,16 @@ import {
   LOGOUT,
   REGISTER,
   RETRIEVE_TOKEN,
-  SET_BIOMETRIC_STATUS,
-  SET_USER_ID,
-  STOP_LOADING_AUTH,
 } from '../actions/AuthActions';
 
 export interface AuthStatus {
-  userId: string | null;
-  token: string | null;
-  tokenExpire: string | null;
-  isLoading: boolean;
+  token?: string | null;
+  tokenExpire?: string | null;
 }
 
 const INITIAL_STATE: AuthStatus = {
-  userId: null,
   token: null,
   tokenExpire: null,
-  isLoading: true,
 };
 
 export const AuthReducer = (
@@ -29,6 +22,35 @@ export const AuthReducer = (
   action: AuthAction,
 ): AuthStatus => {
   switch (action.type) {
+    case RETRIEVE_TOKEN:
+      BaseService.setToken(action.token!);
+      return {
+        ...previousState,
+        token: action.token,
+        tokenExpire: action.token_expiration,
+      };
+    case LOGIN:
+      BaseService.setToken(action.token!);
+      return {
+        ...previousState,
+        token: action.token,
+        tokenExpire: action.token_expiration,
+      };
+    case LOGOUT:
+      BaseService.setToken(null);
+      return {
+        ...previousState,
+        token: null,
+        tokenExpire: null,
+      };
+    case REGISTER:
+      BaseService.setToken(action.token!);
+      return {
+        ...previousState,
+        token: action.token,
+        tokenExpire: action.token_expiration,
+      };
+
     default:
       return previousState;
   }

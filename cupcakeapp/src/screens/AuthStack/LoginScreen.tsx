@@ -28,6 +28,8 @@ import AuthService from '../../services/AuthService';
 import {APIError} from '../../Errors/APIError';
 import {useDispatch} from 'react-redux';
 import {showAlert} from '../../store/actions/AlertActions';
+import {login} from '../../store/actions/AuthActions';
+import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 
 type PropsType = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -44,9 +46,13 @@ function LoginScreen(props: PropsType): JSX.Element {
 
   const onLogin = async (): Promise<void> => {
     try {
+      dispatch(startLoading());
       const loginToken = await AuthService.login(email, password);
-      console.log(loginToken);
+
+      dispatch(stopLoading());
+      dispatch(login(loginToken));
     } catch (e: any) {
+      dispatch(stopLoading());
       console.log(e);
       if (e instanceof APIError) {
         e.showAlert(dispatch);

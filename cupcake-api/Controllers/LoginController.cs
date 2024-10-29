@@ -17,7 +17,6 @@ using cupcake_api.Database;
 using cupcake_api.Responses;
 using cupcake_api.Requests;
 
-
 namespace cupcake_api.Controllers
 {
     [Route("identity/authorize")]
@@ -51,11 +50,13 @@ namespace cupcake_api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         //  [ProducesResponseType(typeof(VTMSharedModels.Data.Location), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<AuthTokenResponse>> Login([FromForm] AuthTokenRequest loginInfo)
+        public async Task<ActionResult<AuthTokenResponse>> Login(
+            [FromForm] AuthTokenRequest loginInfo
+        )
         {
             if (loginInfo.grant_type == "password")
             {
-                User appUser = _signInManager.UserManager.Users.SingleOrDefault(
+                User? appUser = _signInManager.UserManager.Users.SingleOrDefault(
                     r => r.UserName == loginInfo.username
                 );
                 if (appUser == null || !appUser.Enabled)
@@ -81,8 +82,10 @@ namespace cupcake_api.Controllers
                     return Unauthorized(new ErrorResponse("Error", "Wrong username or password."));
                 }
             }
- 
-            return BadRequest(new ErrorResponse("Error", "Unsupported grant type" + loginInfo.grant_type));
+
+            return BadRequest(
+                new ErrorResponse("Error", "Unsupported grant type" + loginInfo.grant_type)
+            );
         }
 
         private async Task<AuthTokenResponse> BuildToken(AuthTokenRequest userInfo)
@@ -125,7 +128,5 @@ namespace cupcake_api.Controllers
                 token_type = "bearer",
             };
         }
-
- 
     }
 }

@@ -26,6 +26,10 @@ import {hideAlert} from './src/store/actions/AlertActions';
 import AlertPopup from './src/components/AlertPopup';
 import {StoreState} from './src/store/reducers';
 import {AlertInfo} from './src/store/reducers/AlertReducer';
+import {LoadingOverlay} from './src/components/LoadingOverlay';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {LOGOUT, updateAuthToken} from './src/store/actions/AuthActions';
+import AuthService from './src/services/AuthService';
 
 function MainApp(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -33,8 +37,43 @@ function MainApp(): JSX.Element {
   const activeAlert = useSelector(
     (state: StoreState): AlertInfo | null => state.alert.activeAlert,
   );
+  const loadingCount = useSelector(
+    (state: StoreState): number => state.loader.loadingCount,
+  );
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  /**
+   * Verify auth status of user.
+   * @returns {Promise<void>}
+   */
+  const verifyAuthStatus = async (): Promise<void> => {
+    try {
+      const userToken: string | null = await EncryptedStorage.getItem('token');
+      const tokenExpire: string | null = await EncryptedStorage.getItem(
+        'token_expiration',
+      );
+
+      if (userToken == null) {
+        dispatch({type: LOGOUT});
+      } else if (tokenExpire != null && new Date(tokenExpire) < new Date()) {
+        dispatch({type: LOGOUT});
+      } else {
+        try {
+          const response = await AuthService.refreshToken(userToken);
+          if (response != null) {
+            dispatch(updateAuthToken(response));
+          } else {
+            dispatch({type: LOGOUT});
+          }
+        } catch (e: any) {
+          // we should verify if we really need to log out
+          console.log(e, e.message);
+          dispatch({type: LOGOUT});
+        }
+      }
+    } catch (error) {}
   };
 
   const popupAlert = useMemo(() => {
@@ -73,12 +112,13 @@ function MainApp(): JSX.Element {
     );
   }, [activeAlert]);
   console.log(activeAlert);
-  
+
   return (
     <>
       <NavigationContainer>
         <BottomTabNavigator />
       </NavigationContainer>
+      <LoadingOverlay loading={loadingCount > 0} />
       {popupAlert}
     </>
   );
