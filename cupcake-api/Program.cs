@@ -185,11 +185,13 @@ namespace cupcake_api
             {
                 app.UseHttpsRedirection();
             }
+            app.UseStaticFiles();
+
             app.UseAuthorization();
 
             app.MapControllers();
 
             app.Run();
         }
-    }
+    }; 
 }

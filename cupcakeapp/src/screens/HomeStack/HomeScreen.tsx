@@ -22,11 +22,17 @@ import {HomeStackParamList} from '../../navigation/HomeStackNavigator';
 import {WHITE} from '../../config/colors';
 import SearchField from '../../components/SearchField';
 import ProductCard from '../../components/ProductCard';
-
+import {useQuery} from '@tanstack/react-query';
+import ProductService from '../../services/ProductService';
 type PropsType = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 function HomeScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
+  const {data: products, isLoading} = useQuery({
+    queryKey: ['products'],
+    queryFn: ProductService.getProducts,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,8 +41,8 @@ function HomeScreen(props: PropsType): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <ProductCard/>
-          <ProductCard/>
+          <ProductCard />
+          <ProductCard />
         </View>
       </ScrollView>
     </SafeAreaView>

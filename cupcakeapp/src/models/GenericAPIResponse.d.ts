@@ -3,11 +3,11 @@ export interface APIErrorList {
 }
 
 export interface ErrorResponse {
-  status?: string | null;
-  message: string | null;
-  errors?: APIErrorList | null;
+  type: string;
+  title: string;
+  status: number;
+  errors: APIErrorList;
+  traceId: string;
 }
 
-export interface GenericAPIResponse<T> extends ErrorResponse {
-  data?: T;
-}
+export type GenericAPIResponse<T> = T | ErrorResponse;

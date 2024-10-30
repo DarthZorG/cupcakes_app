@@ -1,6 +1,7 @@
 ﻿using cupcake_api.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace cupcake_api.Models
 {
@@ -16,17 +17,17 @@ namespace cupcake_api.Models
         public double Price { get; set; }
 
         [MaxLength(100)]
-        public string Flavor { get; set; }  
+        public string Flavor { get; set; }
 
-        public String Description { get; set; } 
+        public String Description { get; set; }
 
-        public bool Enabled {  get; set; }  
+        public bool Enabled { get; set; }
 
-        public bool GlutenFree { get; set; }    
+        public bool GlutenFree { get; set; }
 
-        public bool LactoseFree { get; set; }  
+        public bool LactoseFree { get; set; }
 
-        public bool SugarFree { get; set; } 
+        public bool SugarFree { get; set; }
 
         public int DisplayOrder { get; set; }
 
@@ -34,7 +35,21 @@ namespace cupcake_api.Models
         public DateTime UpdatedAt { get; set; }
 
         [SwaggerReadOnly]
-
         public DateTime CreatedAt { get; set; }
+
+        public long ImageId { get; set; }
+
+        [ForeignKey("ImageId")]
+        [JsonIgnore]
+        public UploadFile? Image { get; set; }
+
+        [NotMapped]
+        [SwaggerReadOnly]
+        public PublicFile? Picture
+        {
+            get { 
+                return Image; 
+            }
+        }
     }
 }

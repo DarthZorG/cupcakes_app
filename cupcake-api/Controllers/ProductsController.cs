@@ -10,7 +10,7 @@ using cupcake_api.Models;
 
 namespace cupcake_api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -25,14 +25,17 @@ namespace cupcake_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            return await _context.Product.ToListAsync();
+            return await _context.Product.Include(e => e.Image).ToListAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(long id)
         {
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Product
+                .Include(e => e.Image)
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
 
             if (product == null)
             {

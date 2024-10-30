@@ -484,3 +484,5 @@ $RECYCLE.BIN/
 *.swp
 
 /appsettings.json
+/wwwroot/upload/*
+!/wwwroot/upload/do-not-delete.txt

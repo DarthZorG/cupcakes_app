@@ -200,7 +200,7 @@ namespace cupcake_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("cupcake_api.Models.DeliveryMethod", b =>
@@ -230,7 +230,7 @@ namespace cupcake_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryMethod");
+                    b.ToTable("DeliveryMethod", (string)null);
                 });
 
             modelBuilder.Entity("cupcake_api.Models.Order", b =>
@@ -281,7 +281,7 @@ namespace cupcake_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("cupcake_api.Models.PaymentMethod", b =>
@@ -308,7 +308,7 @@ namespace cupcake_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod");
+                    b.ToTable("PaymentMethod", (string)null);
                 });
 
             modelBuilder.Entity("cupcake_api.Models.Product", b =>
@@ -340,6 +340,9 @@ namespace cupcake_api.Migrations
                     b.Property<bool>("GlutenFree")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<long>("ImageId")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("LactoseFree")
                         .HasColumnType("tinyint(1)");
 
@@ -362,9 +365,11 @@ namespace cupcake_api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("cupcake_api.Models.UploadFile", b =>
@@ -393,7 +398,7 @@ namespace cupcake_api.Migrations
 
                     b.HasKey("FileId");
 
-                    b.ToTable("UploadedFiles");
+                    b.ToTable("UploadedFiles", (string)null);
                 });
 
             modelBuilder.Entity("cupcake_api.Models.User", b =>
@@ -569,9 +574,17 @@ namespace cupcake_api.Migrations
 
             modelBuilder.Entity("cupcake_api.Models.Product", b =>
                 {
+                    b.HasOne("cupcake_api.Models.UploadFile", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("cupcake_api.Models.Order", null)
                         .WithMany("products")
                         .HasForeignKey("OrderId");
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("cupcake_api.Models.User", b =>

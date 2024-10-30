@@ -5,7 +5,7 @@ import {
 } from '../models/AuthResponses';
 import {APIError} from '../Errors/APIError';
 import {ErrorResponse, GenericAPIResponse} from '../models/GenericAPIResponse';
-import {BaseService} from './BaseService';
+import {AuthorizationHeader, BaseService} from './BaseService';
 import {API_URL, BASE_URL} from '../config';
 
 export default class AuthService extends BaseService {
@@ -37,14 +37,17 @@ export default class AuthService extends BaseService {
   }
 
   static async refreshToken(
-    oldToken: string,
+    authToken: string,
+    refreshToken: string,
   ): Promise<RefreshTokenResponse | null> {
-    const response = await fetch(`${API_URL}/token/refresh`, {
-      method: 'GET',
+    const url = `${BASE_URL}identity/authorize/refresh`;
+    const response = await fetch(url, {
+      method: 'POST',
       headers: {
         ...this.getCommonHeaders(),
-        Authorization: 'Bearer ' + oldToken,
+        Authorization: 'Bearer ' + authToken,
       },
+      body: JSON.stringify({refresh_token: refreshToken}),
     });
 
     let jsonResponse: RefreshTokenResponse | ErrorResponse | null = null;

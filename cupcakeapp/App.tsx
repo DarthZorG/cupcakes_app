@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -54,14 +54,20 @@ function MainApp(): JSX.Element {
       const tokenExpire: string | null = await EncryptedStorage.getItem(
         'token_expiration',
       );
+      const refreshToken: string | null = await EncryptedStorage.getItem(
+        'refresh_token',
+      );
 
-      if (userToken == null) {
+      if (userToken == null || refreshToken == null) {
         dispatch({type: LOGOUT});
       } else if (tokenExpire != null && new Date(tokenExpire) < new Date()) {
         dispatch({type: LOGOUT});
       } else {
         try {
-          const response = await AuthService.refreshToken(userToken);
+          const response = await AuthService.refreshToken(
+            userToken,
+            refreshToken,
+          );
           if (response != null) {
             dispatch(updateAuthToken(response));
           } else {
@@ -111,7 +117,12 @@ function MainApp(): JSX.Element {
       />
     );
   }, [activeAlert]);
-  console.log(activeAlert);
+
+  useEffect(() => {
+    verifyAuthStatus().catch(e => {
+      console.log(e);
+    });
+  }, []);
 
   return (
     <>

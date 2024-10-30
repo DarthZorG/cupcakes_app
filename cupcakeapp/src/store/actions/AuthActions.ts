@@ -40,6 +40,7 @@ export const login = (
         'token_expiration',
         expiration.toISOString(),
       );
+      await EncryptedStorage.setItem('refresh_token', data.refresh_token ?? '');
     } catch (e) {
       console.log(e);
     }
@@ -70,6 +71,7 @@ export const logout = (): ThunkAction<
     try {
       await EncryptedStorage.removeItem('token');
       await EncryptedStorage.removeItem('token_expiration');
+      await EncryptedStorage.removeItem('refresh_token');
       dispatch({type: LOGOUT});
     } catch (e) {
       console.log(e);
@@ -91,6 +93,7 @@ export const register = (
         'token_expiration',
         expiration.toISOString(),
       );
+      await EncryptedStorage.setItem('refresh_token', data.refresh_token ?? '');
     } catch (e) {
       console.log(e);
     }
@@ -116,6 +119,7 @@ export const updateAuthToken = (
         'token_expiration',
         expiration.toISOString(),
       );
+      await EncryptedStorage.setItem('refresh_token', data.refresh_token ?? '');
     } catch (e) {
       console.log(e);
     }

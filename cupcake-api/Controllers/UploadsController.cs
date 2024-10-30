@@ -55,7 +55,7 @@ namespace cupcake_api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PublicFile?>> GetFile(long id)
         {
-            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
+            //User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
             var item = await _context.UploadedFiles.FindAsync(id);
 
             if (item == null)
@@ -76,7 +76,7 @@ namespace cupcake_api.Controllers
         /// <response code="401">User is not authenticated</response>
         /// <response code="500">An unspecified server error happened</response>
         [HttpPost]
-        [Authorize("Create Users")]
+        [Authorize("Delete Products")]
         [ProducesResponseType(typeof(UploadFile), 201)]
         public async Task<ActionResult<UploadFile>> CreateFile(IFormFile file)
         {
@@ -89,6 +89,11 @@ namespace cupcake_api.Controllers
             User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
             if (file.Length <= 0)
                 return BadRequest();
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
 
             //Strip out any path specifiers (ex: /../)
             var originalFileName = Path.GetFileName(file.FileName);
@@ -126,7 +131,7 @@ namespace cupcake_api.Controllers
         /// <response code="404">The reqeusted file was not found</response>
         /// <response code="500">An unspecified server error happened</response>
         [HttpPut("{id}")]
-        [Authorize("Modify Users")]
+        [Authorize("Update Products")]
         [ProducesResponseType(typeof(void), 204)]
         public async Task<ActionResult> UpdateFile(long id, IFormFile file)
         {
@@ -190,7 +195,7 @@ namespace cupcake_api.Controllers
         /// <response code="409">The reqeusted file is in use and cannot be deleted</response>
         /// <response code="500">An unspecified server error happened</response>
         [HttpDelete("{id}")]
-        [Authorize("Modify Users")]
+        [Authorize("Delete Products")]
         [ProducesResponseType(typeof(void), 204)]
         public async Task<ActionResult> DeleteFile(long id)
         {
