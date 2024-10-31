@@ -4,7 +4,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   Image,
@@ -33,6 +33,14 @@ import PageHeader from '../../components/PageHeader';
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditProduct'>;
 
 function EditProductScreen(props: PropsType): JSX.Element {
+  const item: Product = props.route.params.item;
+  const [name, setName] = useState(item.name);
+  const [flavor, setFlavor] = useState(item.flavor);
+  const [price, setPrice] = useState(item.price);
+  const [sugarFree, setSugarFree] = useState(item.sugarFree);
+  const [lactoseFree, setLactoseFree] = useState(item.lactoseFree);
+  const [glutenFree, setGlutenFree] = useState(item.glutenFree);
+
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="Editar Produto" />
@@ -40,8 +48,20 @@ function EditProductScreen(props: PropsType): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <FormField title="Nome produto" value="Floresta negra" />
-          <FormField title="Sabor" value="Chocolate com cereja" />
+          <FormField
+            title="Nome produto"
+            value={name}
+            onChange={newVal => {
+              setName(newVal);
+            }}
+          />
+          <FormField
+            title="Sabor"
+            value={flavor}
+            onChange={newVal => {
+              setFlavor(newVal);
+            }}
+          />
           <FormField title="Preço (R$)" value="4,50" />
           <View style={[styles.switchContainer]}>
             <BoldText>Sem açucar?</BoldText>
@@ -49,7 +69,10 @@ function EditProductScreen(props: PropsType): JSX.Element {
               style={styles.switchStyle}
               trackColor={{true: BLUE, false: GRAY}}
               thumbColor={Platform.OS === 'ios' ? WHITE : WHITE}
-              value={true}
+              value={sugarFree}
+              onChange={() => {
+                setSugarFree(!sugarFree);
+              }}
             />
           </View>
           <View style={[styles.switchContainer]}>
@@ -58,7 +81,10 @@ function EditProductScreen(props: PropsType): JSX.Element {
               style={styles.switchStyle}
               trackColor={{true: BLUE, false: GRAY}}
               thumbColor={Platform.OS === 'ios' ? WHITE : WHITE}
-              value={true}
+              value={lactoseFree}
+              onChange={() => {
+                setLactoseFree(!lactoseFree);
+              }}
             />
           </View>
           <View style={[styles.switchContainer]}>
@@ -67,7 +93,10 @@ function EditProductScreen(props: PropsType): JSX.Element {
               style={styles.switchStyle}
               trackColor={{true: BLUE, false: GRAY}}
               thumbColor={Platform.OS === 'ios' ? WHITE : WHITE}
-              value={false}
+              value={glutenFree}
+              onChange={() => {
+                setGlutenFree(!glutenFree);
+              }}
             />
           </View>
           <View style={[styles.photoContainer]}>

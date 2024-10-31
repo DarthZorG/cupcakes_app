@@ -36,6 +36,34 @@ import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Products'>;
 
+const AddProductHeader = (props: PropsType) => {
+  return (
+    <TouchableOpacity
+      testID="navigate_add_address"
+      onPress={() => {
+        props.navigation.navigate('EditProduct', {
+          item: {
+            id: 0,
+            name: '',
+            price: 0,
+            flavor: '',
+            description: '',
+            enabled: true,
+            glutenFree: false,
+            lactoseFree: false,
+            sugarFree: false,
+            displayOrder: 9999,
+            updatedAt: '',
+            createdAt: '',
+            imageId: -1,
+          },
+        });
+      }}>
+      <Material style={{color: BLACK}} name={'cookie-plus'} size={20} />
+    </TouchableOpacity>
+  );
+};
+
 function ProductsScreen(props: PropsType): JSX.Element {
   const dispatch = useDispatch();
   const {data: products, isLoading} = useQuery({
@@ -56,15 +84,7 @@ function ProductsScreen(props: PropsType): JSX.Element {
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => {
-        return (
-          <TouchableOpacity
-            testID="navigate_add_address"
-            onPress={() => {
-              props.navigation.navigate('EditProduct');
-            }}>
-            <Material style={{color: BLACK}} name={'cookie-plus'} size={20} />
-          </TouchableOpacity>
-        );
+        return AddProductHeader(props);
       },
     });
   }, [props.navigation]);
@@ -81,11 +101,11 @@ function ProductsScreen(props: PropsType): JSX.Element {
             <ProductCard
               item={item}
               isAdmin={true}
-              onEdit={product => {
-                props.navigation.navigate('EditProduct', {item: product});
+              onEdit={() => {
+                props.navigation.navigate('EditProduct', {item});
               }}
-              onDelete={product => {
-                console.log(product);
+              onDelete={() => {
+                console.log(item);
               }}
             />
           );

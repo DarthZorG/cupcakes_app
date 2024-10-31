@@ -19,8 +19,8 @@ import {Product} from '../models/ProductResponses';
 export type ProductCardProps = {
   item: Product;
   isAdmin?: boolean;
-  onEdit?: (item: Product) => void;
-  onDelete?: (item: Product) => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 const ProductCard = (props: ProductCardProps): JSX.Element => {
