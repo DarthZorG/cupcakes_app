@@ -4,9 +4,10 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -27,10 +28,31 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import AdminProductCard from '../../components/AdminProductCard';
 import SearchField from '../../components/SearchField';
 import PageHeader from '../../components/PageHeader';
+import ProductCard from '../../components/ProductCard';
+import {useQuery} from '@tanstack/react-query';
+import ProductService from '../../services/ProductService';
+import {useDispatch} from 'react-redux';
+import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Products'>;
 
 function ProductsScreen(props: PropsType): JSX.Element {
+  const dispatch = useDispatch();
+  const {data: products, isLoading} = useQuery({
+    queryKey: ['products'],
+    queryFn: async () => {
+      return await ProductService.getProducts();
+    },
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(startLoading());
+    } else {
+      dispatch(stopLoading());
+    }
+  }, [isLoading]);
+
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => {
@@ -51,16 +73,24 @@ function ProductsScreen(props: PropsType): JSX.Element {
     <SafeAreaView style={styles.container}>
       <PageHeader title="Gerenciador de Produtos" />
       <SearchField placeHolder="procura.." />
-      <ScrollView
+      <FlatList
+        style={styles.scrollview}
+        data={products}
+        renderItem={({item}) => {
+          return <ProductCard item={item} isAdmin={true} />;
+        }}
+      />
+
+      {/*    <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <AdminProductCard />
-          <AdminProductCard />
-          <AdminProductCard />
-          <AdminProductCard />
+          <ProductCard isAdmin={true} />
+          <ProductCard isAdmin={true} />
+          <ProductCard isAdmin={true} />
+          <ProductCard isAdmin={true} />
         </View>
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 }

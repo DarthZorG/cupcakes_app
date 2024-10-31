@@ -118,7 +118,7 @@ namespace cupcake_api.Controllers
             results = f;
             var pf = (PublicFile?)f;
 
-            return Created(pf.URI, results);
+            return Created(pf.uri, results);
         }
 
         /// <summary>

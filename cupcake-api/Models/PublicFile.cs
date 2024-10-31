@@ -11,10 +11,10 @@ namespace cupcake_api.Models
 {
     public class PublicFile
     {
-        public string FileName { get; set; }
-        public string URI { get; set; }
+        public string fileName { get; set; }
+        public string uri { get; set; }
 
         public static implicit operator PublicFile?(UploadFile? u) =>
-            (u == null) ? null : new PublicFile { FileName = u.FileName, URI = u.RealName };
+            (u == null) ? null : new PublicFile { fileName = u.FileName, uri = u.RealName };
     }
 }

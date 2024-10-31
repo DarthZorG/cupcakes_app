@@ -11,8 +11,8 @@ namespace cupcake_api.Models
                 return null;
             }
             var f = new PublicFileEx();
-            f.FileName = publicFile.FileName;
-            f.URI = UploadsController.GetBaseUri(request) + GetUploadPath() + publicFile.URI;
+            f.fileName = publicFile.fileName;
+            f.uri = UploadsController.GetBaseUri(request) + GetUploadPath() + publicFile.uri;
             return f;
         }
 

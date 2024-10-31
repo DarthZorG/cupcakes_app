@@ -15,7 +15,7 @@ export interface Product {
   updatedAt: string;
   createdAt: string;
   imageId: number;
-  image: UploadFile;
+  picture: UploadFile;
 }
 
-export type ProductListResponse = GenericAPIResponse<Product[]>;
+export type ProductListResponse = Product[];

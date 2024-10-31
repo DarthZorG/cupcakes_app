@@ -12,14 +12,14 @@ export default class ProductService extends BaseService {
         ...this.getCommonHeaders(),
       },
     });
-    let jsonResponse: ProductListResponse | null = null;
+    let jsonResponse: ProductListResponse | ErrorResponse | null = null;
     try {
       jsonResponse = await response.json();
     } catch (e) {
       //ignore this error now
     }
     if (response.ok) {
-      return jsonResponse!;
+      return jsonResponse as ProductListResponse;
     } else {
       throw new APIError(jsonResponse as ErrorResponse, response);
     }

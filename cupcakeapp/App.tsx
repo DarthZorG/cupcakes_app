@@ -30,6 +30,9 @@ import {LoadingOverlay} from './src/components/LoadingOverlay';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {LOGOUT, updateAuthToken} from './src/store/actions/AuthActions';
 import AuthService from './src/services/AuthService';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function MainApp(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -138,7 +141,9 @@ function MainApp(): JSX.Element {
 function App(): JSX.Element {
   return (
     <Provider store={store}>
-      <MainApp />
+      <QueryClientProvider client={queryClient}>
+        <MainApp />
+      </QueryClientProvider>
     </Provider>
   );
 }
