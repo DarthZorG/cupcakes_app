@@ -19,6 +19,8 @@ import {Product} from '../models/ProductResponses';
 export type ProductCardProps = {
   item: Product;
   isAdmin?: boolean;
+  onEdit?: (item: Product) => void;
+  onDelete?: (item: Product) => void;
 };
 
 const ProductCard = (props: ProductCardProps): JSX.Element => {
@@ -46,7 +48,15 @@ const ProductCard = (props: ProductCardProps): JSX.Element => {
                 {'Preço: R$ ' + props.item.price.toFixed(2)}
               </DefaultText>
             )}
-            <DefaultText style={styles.badge}>{'Sem açucar'}</DefaultText>
+            {props.item.glutenFree && (
+              <DefaultText style={styles.badge}>{'Sem gluten'}</DefaultText>
+            )}
+            {props.item.lactoseFree && (
+              <DefaultText style={styles.badge}>{'Sem lactosio'}</DefaultText>
+            )}
+            {props.item.sugarFree && (
+              <DefaultText style={styles.badge}>{'Sem açucar'}</DefaultText>
+            )}
           </View>
           {!isAdmin && (
             <View style={styles.favouriteContainer}>
@@ -63,7 +73,7 @@ const ProductCard = (props: ProductCardProps): JSX.Element => {
         <View style={styles.priceContainer}>
           {isAdmin ? (
             <>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={props.onEdit}>
                 <View style={styles.buttonContainer}>
                   <Material
                     style={{alignItems: 'center', color: LIGHT_BLUE}}
@@ -73,7 +83,7 @@ const ProductCard = (props: ProductCardProps): JSX.Element => {
                   <DefaultText style={styles.edit}>{'Edit'}</DefaultText>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={props.onDelete}>
                 <View style={styles.buttonContainer}>
                   <Material
                     style={{alignItems: 'center', color: RED}}

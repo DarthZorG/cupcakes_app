@@ -34,7 +34,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
-function MainApp(): JSX.Element {
+function MainApp(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const dispatch = useDispatch();
   const activeAlert = useSelector(
@@ -138,7 +138,7 @@ function MainApp(): JSX.Element {
   );
 }
 
-function App(): JSX.Element {
+function App(): React.JSX.Element {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>

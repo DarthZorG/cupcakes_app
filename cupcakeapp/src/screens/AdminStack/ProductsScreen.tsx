@@ -77,7 +77,18 @@ function ProductsScreen(props: PropsType): JSX.Element {
         style={styles.scrollview}
         data={products}
         renderItem={({item}) => {
-          return <ProductCard item={item} isAdmin={true} />;
+          return (
+            <ProductCard
+              item={item}
+              isAdmin={true}
+              onEdit={product => {
+                props.navigation.navigate('EditProduct', {item: product});
+              }}
+              onDelete={product => {
+                console.log(product);
+              }}
+            />
+          );
         }}
       />
 
