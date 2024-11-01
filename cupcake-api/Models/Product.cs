@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace cupcake_api.Models
 {
-    public class Product
+    public class Product : BaseModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [SwaggerReadOnly]
@@ -31,13 +31,9 @@ namespace cupcake_api.Models
 
         public int DisplayOrder { get; set; }
 
-        [SwaggerReadOnly]
-        public DateTime UpdatedAt { get; set; }
+        
 
-        [SwaggerReadOnly]
-        public DateTime CreatedAt { get; set; }
-
-        public long ImageId { get; set; }
+        public long? ImageId { get; set; }
 
         [ForeignKey("ImageId")]
         [JsonIgnore]

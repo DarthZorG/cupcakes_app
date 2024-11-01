@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace cupcake_api.Models
 {
-    public class DeliveryMethod
+    public class DeliveryMethod : BaseModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [SwaggerReadOnly]
@@ -17,10 +17,6 @@ namespace cupcake_api.Models
 
         public bool Enabled { get; set; }
 
-        [SwaggerReadOnly]
-        public DateTime UpdatedAt { get; set; }
-
-        [SwaggerReadOnly]
-        public DateTime CreatedAt { get; set; }
+       
     }
 }

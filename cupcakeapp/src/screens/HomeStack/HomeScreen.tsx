@@ -35,20 +35,24 @@ function HomeScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const dispatch = useDispatch();
 
-  const {data: products, isLoading} = useQuery({
+  const {
+    data: products,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       return await ProductService.getProducts();
     },
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (isLoading) {
       dispatch(startLoading());
     } else {
       dispatch(stopLoading());
     }
-  }, [isLoading]);
+  }, [isLoading]); */
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,6 +62,10 @@ function HomeScreen(props: PropsType): JSX.Element {
         data={products}
         renderItem={({item}) => {
           return <ProductCard item={item} />;
+        }}
+        refreshing={isLoading}
+        onRefresh={() => {
+          refetch();
         }}
       />
     </SafeAreaView>

@@ -1,4 +1,3 @@
-import {GenericAPIResponse} from './GenericAPIResponse';
 import {UploadFile} from './UploadFileResponses';
 
 export interface Product {
@@ -12,10 +11,11 @@ export interface Product {
   lactoseFree: boolean;
   sugarFree: boolean;
   displayOrder: number;
-  updatedAt: string;
-  createdAt: string;
-  imageId: number;
-  picture: UploadFile;
+  imageId?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+  picture?: UploadFile | null;
 }
+
 
 export type ProductListResponse = Product[];

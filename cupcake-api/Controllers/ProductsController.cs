@@ -50,10 +50,7 @@ namespace cupcake_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(long id, Product product)
         {
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
+            product.Id = id;
 
             _context.Entry(product).State = EntityState.Modified;
 

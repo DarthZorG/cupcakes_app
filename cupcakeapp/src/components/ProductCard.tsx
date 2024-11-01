@@ -45,7 +45,11 @@ const ProductCard = (props: ProductCardProps): JSX.Element => {
             </DefaultText>
             {isAdmin && (
               <DefaultText style={styles.flavor}>
-                {'Preço: R$ ' + props.item.price.toFixed(2)}
+                {'Preço: R$ ' +
+                  props.item.price.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
               </DefaultText>
             )}
             {props.item.glutenFree && (

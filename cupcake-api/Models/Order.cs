@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace cupcake_api.Models
 {
-    public class Order
+    public class Order : BaseModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [SwaggerReadOnly]
@@ -39,10 +39,6 @@ namespace cupcake_api.Models
 
         public String? TransactionData { get; set; }
 
-        [SwaggerReadOnly]
-        public DateTime UpdatedAt { get; set; }
-
-        [SwaggerReadOnly]
-        public DateTime CreatedAt { get; set; }
+    
     }
 }

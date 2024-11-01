@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  KeyboardTypeOptions,
+  InputModeOptions,
 } from 'react-native';
 import {BLACK, BLUE, GRAY, WHITE} from '../config/colors';
 import {BoldText} from './StyledTexts';
@@ -17,6 +19,8 @@ export type FormFieldProps = {
   title: string;
   value: string;
   onChange: (text: string) => void;
+  keyboardType?: KeyboardTypeOptions;
+  inputMode?: InputModeOptions;
 };
 
 const FormField = (props: FormFieldProps): JSX.Element => {
@@ -26,6 +30,8 @@ const FormField = (props: FormFieldProps): JSX.Element => {
       <TextInput
         style={styles.input}
         value={props.value}
+        keyboardType={props.keyboardType}
+        inputMode={props.inputMode}
         onChangeText={text => {
           props.onChange(text);
         }}

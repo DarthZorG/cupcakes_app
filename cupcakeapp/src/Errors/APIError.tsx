@@ -17,7 +17,7 @@ export class APIError extends Error {
     // eslint-disable-next-line no-undef
     requestResponse: Response,
   ) {
-    super(apiResponse?.message ?? 'Erro do servidor');
+    super(apiResponse?.title ?? 'Erro do servidor');
     this.apiResponse = apiResponse;
     this.requestResponse = requestResponse;
   }
@@ -71,8 +71,8 @@ export class APIError extends Error {
     let messageContent: JSX.Element[] = [];
 
     if (this.apiResponse != null) {
-      if (this.apiResponse.message !== '' && this.apiResponse.message != null) {
-        errorMessage = this.apiResponse.message;
+      if (this.apiResponse.title !== '' && this.apiResponse.title != null) {
+        errorMessage = this.apiResponse.title;
       }
       if (this.apiResponse.errors != null) {
         const keys = Object.keys(this.apiResponse.errors);

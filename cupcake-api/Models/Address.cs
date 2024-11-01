@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace cupcake_api.Models
 {
-    public class Address
+    public class Address : BaseModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [SwaggerReadOnly]
@@ -22,10 +22,6 @@ namespace cupcake_api.Models
         [MaxLength(20)]
         public String? ZipCode { get; set; }
 
-        [SwaggerReadOnly]
-        public DateTime UpdatedAt { get; set; }
-
-        [SwaggerReadOnly]
-        public DateTime CreatedAt { get; set; }
+      
     }
 }

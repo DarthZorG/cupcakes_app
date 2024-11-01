@@ -4,7 +4,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   FlatList,
@@ -33,6 +33,7 @@ import {useQuery} from '@tanstack/react-query';
 import ProductService from '../../services/ProductService';
 import {useDispatch} from 'react-redux';
 import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
+import {useFocusEffect} from '@react-navigation/native';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Products'>;
 
@@ -53,9 +54,9 @@ const AddProductHeader = (props: PropsType) => {
             lactoseFree: false,
             sugarFree: false,
             displayOrder: 9999,
-            updatedAt: '',
-            createdAt: '',
-            imageId: -1,
+            updatedAt: null,
+            createdAt: null,
+            imageId: null,
           },
         });
       }}>
@@ -66,20 +67,22 @@ const AddProductHeader = (props: PropsType) => {
 
 function ProductsScreen(props: PropsType): JSX.Element {
   const dispatch = useDispatch();
-  const {data: products, isLoading} = useQuery({
+  const {
+    data: products,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       return await ProductService.getProducts();
     },
   });
 
-  useEffect(() => {
-    if (isLoading) {
-      dispatch(startLoading());
-    } else {
-      dispatch(stopLoading());
-    }
-  }, [isLoading]);
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -96,6 +99,10 @@ function ProductsScreen(props: PropsType): JSX.Element {
       <FlatList
         style={styles.scrollview}
         data={products}
+        refreshing={isLoading}
+        onRefresh={() => {
+          refetch();
+        }}
         renderItem={({item}) => {
           return (
             <ProductCard

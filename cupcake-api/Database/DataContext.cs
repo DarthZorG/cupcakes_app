@@ -22,34 +22,33 @@ namespace cupcake_api.Database
     public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options)
-        : base(options) { }
-
+            : base(options) { }
 
         public DbSet<UploadFile> UploadedFiles { get; set; }
-        /*
-                public override int SaveChanges()
+
+        public override int SaveChanges()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(
+                    e =>
+                        e.Entity is BaseModel
+                        && (e.State == EntityState.Added || e.State == EntityState.Modified)
+                );
+
+            foreach (var entityEntry in entries)
+            {
+                ((BaseModel)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+
+                if (entityEntry.State == EntityState.Added)
                 {
-                    var entries = ChangeTracker
-                        .Entries()
-                        .Where(
-                            e =>
-                                e.Entity is Common.BaseModel
-                                && (e.State == EntityState.Added || e.State == EntityState.Modified)
-                        );
-        
-                    foreach (var entityEntry in entries)
-                    {
-                        ((Common.BaseModel)entityEntry.Entity).UpdatedTS = DateTime.Now;
-        
-                        if (entityEntry.State == EntityState.Added)
-                        {
-                            ((Common.BaseModel)entityEntry.Entity).CreatedTS = DateTime.Now;
-                        }
-                    }
-        
-                    return base.SaveChanges();
+                    ((BaseModel)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
                 }
-         */
+            }
+
+            return base.SaveChanges();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -109,6 +108,7 @@ namespace cupcake_api.Database
                 entity.ToTable("RoleClaims");
             });
         }
+
         public DbSet<cupcake_api.Models.Address> Address { get; set; } = default!;
         public DbSet<cupcake_api.Models.DeliveryMethod> DeliveryMethod { get; set; } = default!;
         public DbSet<cupcake_api.Models.Order> Order { get; set; } = default!;
