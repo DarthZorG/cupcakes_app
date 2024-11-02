@@ -16,6 +16,7 @@ using System.Drawing;
 using System.Reflection.PortableExecutable;
 using cupcake_api.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Hosting;
 
 namespace cupcake_api.Database
 {
@@ -107,6 +108,8 @@ namespace cupcake_api.Database
             {
                 entity.ToTable("RoleClaims");
             });
+
+            modelBuilder.Entity<User>().HasMany(e => e.Favorites).WithMany(e => e.FavoritedBy);
         }
 
         public DbSet<cupcake_api.Models.Address> Address { get; set; } = default!;

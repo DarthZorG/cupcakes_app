@@ -20,11 +20,7 @@ namespace cupcake_api.Models
         [MaxLength(100)]
         public string LastName { get; set; }
 
-        [MaxLength(30)]
-        public string? Language { get; set; }
-
-        [MaxLength(100)]
-        public string? Timezone { get; set; }
+      
 
         public long? AvatarId { get; set; }
 
@@ -40,5 +36,10 @@ namespace cupcake_api.Models
         }
 
         public bool Enabled { get; set; } = true;
+
+
+        public string? PhoneNumber { get; set; }
+
+        public List<Product> Favorites { get; set; }
     }
 }

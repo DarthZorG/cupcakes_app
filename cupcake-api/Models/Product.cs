@@ -47,5 +47,8 @@ namespace cupcake_api.Models
                 return Image; 
             }
         }
+
+        [JsonIgnore]
+        public List<User> FavoritedBy { get; set; }
     }
 }
