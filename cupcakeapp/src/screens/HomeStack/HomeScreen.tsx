@@ -26,15 +26,25 @@ import SearchField from '../../components/SearchField';
 import ProductCard from '../../components/ProductCard';
 import {useQuery} from '@tanstack/react-query';
 import ProductService from '../../services/ProductService';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 import {Product} from '../../models/ProductResponses';
+import {StoreState} from '../../store/reducers';
+import {FavoriteCollection} from '../../store/reducers/FavoritesReducer';
+import {
+  addFavorite,
+  getFavoriteKey,
+  removeFavorite,
+} from '../../store/actions/FavoriteActions';
+import {addItemToCart} from '../../store/actions/CartActions';
 type PropsType = NativeStackScreenProps<HomeStackParamList, 'Home'>;
 
 function HomeScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const dispatch = useDispatch();
-
+  const favorites = useSelector((state: StoreState): FavoriteCollection => {
+    return state.favorites.items;
+  });
   const {
     data: products,
     isLoading,
@@ -46,14 +56,6 @@ function HomeScreen(props: PropsType): JSX.Element {
     },
   });
 
-  /* useEffect(() => {
-    if (isLoading) {
-      dispatch(startLoading());
-    } else {
-      dispatch(stopLoading());
-    }
-  }, [isLoading]); */
-
   return (
     <SafeAreaView style={styles.container}>
       <SearchField placeHolder="O que está procurando?" />
@@ -61,7 +63,22 @@ function HomeScreen(props: PropsType): JSX.Element {
         style={styles.scrollview}
         data={products}
         renderItem={({item}) => {
-          return <ProductCard item={item} />;
+          return (
+            <ProductCard
+              item={item}
+              isFavorite={favorites[getFavoriteKey(item)] != null}
+              onToggleFavorite={() => {
+                if (favorites[getFavoriteKey(item)] != null) {
+                  dispatch(removeFavorite(item));
+                } else {
+                  dispatch(addFavorite(item));
+                }
+              }}
+              onAddToCart={() => {
+                dispatch(addItemToCart(item));
+              }}
+            />
+          );
         }}
         refreshing={isLoading}
         onRefresh={() => {

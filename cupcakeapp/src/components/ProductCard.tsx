@@ -21,16 +21,20 @@ export type ProductCardProps = {
   isAdmin?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  onAddToCart?: () => void;
 };
 
 const ProductCard = (props: ProductCardProps): JSX.Element => {
   const image =
     props.item.picture?.uri != null
       ? {uri: props.item.picture?.uri}
-      : require('../../assets/images/cupcake.jpg');
+      : require('../../assets/images/placeholder.jpg');
 
   const isAdmin = props.isAdmin ?? false;
-
+  const isFavorite = props.isFavorite ?? false;
+  
   return (
     <View style={[styles.cardContainer]}>
       <View style={styles.imageContainer}>
@@ -64,10 +68,10 @@ const ProductCard = (props: ProductCardProps): JSX.Element => {
           </View>
           {!isAdmin && (
             <View style={styles.favouriteContainer}>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={props.onToggleFavorite}>
                 <Ionicons
                   style={{alignItems: 'center', color: '#FF0000'}}
-                  name={'heart-outline'}
+                  name={isFavorite ? 'heart' : 'heart-outline'}
                   size={30}
                 />
               </TouchableOpacity>
@@ -105,7 +109,7 @@ const ProductCard = (props: ProductCardProps): JSX.Element => {
               <BoldText style={styles.price}>
                 {'R$ ' + props.item.price.toFixed(2)}
               </BoldText>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={props.onAddToCart}>
                 <Material
                   style={{alignItems: 'center', color: BLACK}}
                   name={'cart-plus'}

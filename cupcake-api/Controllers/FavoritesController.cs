@@ -33,6 +33,7 @@ namespace cupcake_api.Controllers
         {
             var user = await _context.Users
                 .Include(e => e.Favorites)
+                .ThenInclude(k => k.Image)
                 .Where(r => r.UserName == User.Identity!.Name)
                 .FirstOrDefaultAsync();
 

@@ -31,6 +31,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {LOGOUT, updateAuthToken} from './src/store/actions/AuthActions';
 import AuthService from './src/services/AuthService';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {loadFavorites} from './src/store/actions/FavoriteActions';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,9 @@ function MainApp(): React.JSX.Element {
   const loadingCount = useSelector(
     (state: StoreState): number => state.loader.loadingCount,
   );
+  const isAuthenticated = useSelector((state: StoreState): boolean => {
+    return state.auth.token != null;
+  });
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -126,6 +130,12 @@ function MainApp(): React.JSX.Element {
       console.log(e);
     });
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(loadFavorites());
+    }
+  }, [isAuthenticated]);
 
   return (
     <>

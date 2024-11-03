@@ -14,37 +14,59 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BoldText, DefaultText} from './StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import QuantityInput from './QuatityInput';
+import {CartItem} from '../store/reducers/CartReducer';
 
-export type CartItemCardProps = {
+export interface CartItemCardProps extends CartItem {
   allowEdit: boolean;
-};
+}
 
 const CartItemCard = (props: CartItemCardProps): JSX.Element => {
   const allowEdit = props.allowEdit ?? true;
 
+  const image =
+    props.product.picture?.uri != null
+      ? {uri: props.product.picture?.uri}
+      : require('../../assets/images/placeholder.jpg');
+
   return (
     <View style={[styles.cardContainer]}>
       <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/images/cupcake.jpg')}
-          style={styles.image}
-        />
+        <Image source={image} style={styles.image} />
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.dataContainer}>
           <View style={styles.textContainer}>
-            <BoldText style={styles.productName}>{'Floresta negra'}</BoldText>
+            <BoldText style={styles.productName}>{props.product.name}</BoldText>
             <DefaultText style={styles.flavor}>
-              {'Sabor: Chocolate com cereja'}
+              {'Sabor:  ' + props.product.flavor}
             </DefaultText>
-            <DefaultText style={styles.badge}>{'Sem açucar'}</DefaultText>
+            <View style={styles.badgeContainer}>
+              {props.product.glutenFree && (
+                <DefaultText style={styles.badge}>{'Sem gluten'}</DefaultText>
+              )}
+              {props.product.lactoseFree && (
+                <DefaultText style={styles.badge}>{'Sem lactosio'}</DefaultText>
+              )}
+              {props.product.sugarFree && (
+                <DefaultText style={styles.badge}>{'Sem açucar'}</DefaultText>
+              )}
+            </View>
           </View>
         </View>
         <View style={styles.priceContainer}>
-          <BoldText style={styles.price}>{'R$ 4,50'}</BoldText>
+          <BoldText style={styles.price}>
+            {'Preço: R$ ' +
+              props.product.price.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+          </BoldText>
           {allowEdit ? (
             <Fragment>
-              <QuantityInput style={{marginRight: 10}} />
+              <QuantityInput
+                style={{marginRight: 10}}
+                quantity={props.quantity}
+              />
               <TouchableOpacity onPress={() => {}}>
                 <Material
                   style={{alignItems: 'center', color: '#FF0000'}}
@@ -54,7 +76,7 @@ const CartItemCard = (props: CartItemCardProps): JSX.Element => {
               </TouchableOpacity>
             </Fragment>
           ) : (
-            <BoldText>Quantity: 1</BoldText>
+            <BoldText>{'Quantidade: ' + props.quantity.toFixed(0)}</BoldText>
           )}
         </View>
       </View>
@@ -108,6 +130,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+  },
+  badgeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   priceContainer: {
     width: '100%',

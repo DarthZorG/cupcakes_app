@@ -211,7 +211,7 @@ function EditProductScreen(props: PropsType): JSX.Element {
                   source={
                     picture != null
                       ? {uri: picture}
-                      : require('../../../assets/images/cupcake.jpg')
+                      : require('../../../assets/images/add-picture-placeholder.jpg')
                   }
                   style={styles.image}
                 />

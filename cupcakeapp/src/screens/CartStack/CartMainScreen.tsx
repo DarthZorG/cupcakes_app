@@ -4,9 +4,10 @@
  * @format
  */
 
-import React from 'react';
+import React, {useMemo} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -23,23 +24,42 @@ import CartItemCard from '../../components/CartItemCard';
 import {GRAY, WHITE} from '../../config/colors';
 import CustomButton from '../../components/CustomButton';
 import {BoldText, DefaultText} from '../../components/StyledTexts';
+import {useSelector} from 'react-redux';
+import {StoreState} from '../../store/reducers';
+import {FavoriteCollection} from '../../store/reducers/FavoritesReducer';
+import {CartCollection, CartItem} from '../../store/reducers/CartReducer';
 
 type PropsType = NativeStackScreenProps<CartStackParamList, 'CartHome'>;
 
 function CartMainScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const cartItems = useSelector((state: StoreState): CartCollection => {
+    return state.cart.items;
+  });
+
+  const items = useMemo(() => {
+    const items: CartItem[] = [];
+    for (let pKey in cartItems) {
+      items.push(cartItems[pKey]);
+    }
+    return items;
+  }, [cartItems]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollview}>
-        <View style={styles.innerContainer}>
-          <CartItemCard />
-          <CartItemCard />
-          <CartItemCard />
-        </View>
-      </ScrollView>
+      <FlatList
+        style={styles.scrollview}
+        data={items}
+        renderItem={({item}) => {
+          return (
+            <CartItemCard
+              product={item.product}
+              quantity={item.quantity}
+              allowEdit={true}
+            />
+          );
+        }}
+      />
       <View style={styles.bottomResume}>
         <View style={styles.resumeContainer}>
           <View style={styles.resumeLine}>

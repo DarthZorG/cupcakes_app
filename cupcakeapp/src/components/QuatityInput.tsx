@@ -16,6 +16,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export type QuantityInputProps = {
   style: StyleProp<ViewStyle>;
+  quantity: number;
 };
 
 const QuantityInput = (props: QuantityInputProps): JSX.Element => {
@@ -31,7 +32,7 @@ const QuantityInput = (props: QuantityInputProps): JSX.Element => {
         </TouchableOpacity>
       </View>
       <View style={styles.infoContainer}>
-        <BoldText>1</BoldText>
+        <BoldText>{props.quantity.toFixed(0)}</BoldText>
       </View>
       <View style={styles.quantityButton}>
         <TouchableOpacity onPress={() => {}}>
