@@ -4,9 +4,10 @@
  * @format
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,6 +26,9 @@ import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import PageHeader from '../../components/PageHeader';
+import {useQuery} from '@tanstack/react-query';
+import AddressService from '../../services/AddressService';
+import { useFocusEffect } from '@react-navigation/native';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyAddresses'>;
 
@@ -34,6 +38,23 @@ function MyAddressesScreen(props: PropsType): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const {
+    data: addresses,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['addresses'],
+    queryFn: async () => {
+      return await AddressService.getAddresses();
+    },
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -58,18 +79,29 @@ function MyAddressesScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="Os Meus Endereços" />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollview}>
-        <View style={styles.innerContainer}>
-          <MenuItem
-            title="Rua antonio de Padua, 400"
-            description="80010-000 Centro Civico, Curitiba PR"
-            onPress={() => {
-              props.navigation.navigate('EditAddress');
-            }}></MenuItem>
-        </View>
-      </ScrollView>
+
+      <FlatList
+        style={styles.scrollview}
+        data={addresses}
+        renderItem={({item}) => {
+          return (
+            <MenuItem
+              title={item.address1}
+              description={
+                (item.zipCode + ' ' + item.neighborhood,
+                +', ' + item.city + ' ' + item.state)
+              }
+              onPress={() => {
+                props.navigation.navigate('EditAddress', {address: item});
+              }}
+            />
+          );
+        }}
+        refreshing={isLoading}
+        onRefresh={() => {
+          refetch();
+        }}
+      />
     </SafeAreaView>
   );
 }

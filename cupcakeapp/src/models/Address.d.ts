@@ -6,6 +6,6 @@ export interface Address {
   city: string;
   state: string;
   zipCode: string;
-  updatedAt: string;
-  createdAt: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }

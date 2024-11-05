@@ -14,12 +14,15 @@ import MyProfileScreen from '../screens/ProfileStack/MyProfileScreen';
 import MyFavoritesScreen from '../screens/ProfileStack/MyFavoritesScreen';
 import LoginScreen from '../screens/AuthStack/LoginScreen';
 import RegisterScreen from '../screens/AuthStack/RegisterScreen';
+import {Address} from '../models/Address';
 
 export type ProfileStackParamList = {
   ProfileHome: undefined;
   MyOrders: undefined;
   MyAddresses: undefined;
-  EditAddress: undefined;
+  EditAddress: {
+    address?: Address;
+  };
   MyProfile: undefined;
   MyFavorites: undefined;
   Login: undefined;
