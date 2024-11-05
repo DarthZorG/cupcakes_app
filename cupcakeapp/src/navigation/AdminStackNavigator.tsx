@@ -11,7 +11,7 @@ import OrdersScreen from '../screens/AdminStack/OrdersScreen';
 import ProductsScreen from '../screens/AdminStack/ProductsScreen';
 import EditProductScreen from '../screens/AdminStack/EditProdcutScreen';
 import EditOrderScreen from '../screens/AdminStack/EditOrderScreen';
-import {Product} from '../models/ProductResponses';
+import {Product} from '../models/Product';
 
 export type AdminStackParamList = {
   AdminHome: undefined;

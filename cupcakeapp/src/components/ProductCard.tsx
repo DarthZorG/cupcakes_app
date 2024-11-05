@@ -14,7 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BoldText, DefaultText} from './StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import QuantityInput from './QuatityInput';
-import {Product} from '../models/ProductResponses';
+import {Product} from '../models/Product';
 
 export type ProductCardProps = {
   item: Product;

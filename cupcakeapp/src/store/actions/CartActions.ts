@@ -1,5 +1,5 @@
 import {Action} from 'redux';
-import {Product} from '../../models/ProductResponses';
+import {Product} from '../../models/Product';
 
 export const ADD_CART_ITEM: string = 'ADD_CART_ITEM';
 export const UPDATE_CART_ITEM: string = 'UPDATE_CART_ITEM';

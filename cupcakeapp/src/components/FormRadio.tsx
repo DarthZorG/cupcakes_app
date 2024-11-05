@@ -17,6 +17,8 @@ export type FormRadioProps = {
   style: StyleProp<ViewStyle>;
   title: string;
   options: RadioButtonProps[];
+  selectedId: string;
+  onChange: (selectedId: string) => void;
 };
 
 const FormRadio = (props: FormRadioProps): JSX.Element => {
@@ -25,10 +27,10 @@ const FormRadio = (props: FormRadioProps): JSX.Element => {
       <BoldText style={styles.label}>{props.title}</BoldText>
       <RadioGroup
         radioButtons={props.options}
-        onPress={() => {}}
-        selectedId={props.options[0].id}
+        selectedId={props.selectedId}
         labelStyle={{color: BLACK}}
         containerStyle={styles.radioContainer}
+        onPress={props.onChange}
       />
     </View>
   );

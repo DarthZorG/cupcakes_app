@@ -24,15 +24,19 @@ import CartItemCard from '../../components/CartItemCard';
 import {GRAY, WHITE} from '../../config/colors';
 import CustomButton from '../../components/CustomButton';
 import {BoldText, DefaultText} from '../../components/StyledTexts';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {StoreState} from '../../store/reducers';
 import {FavoriteCollection} from '../../store/reducers/FavoritesReducer';
 import {CartCollection, CartItem} from '../../store/reducers/CartReducer';
+import {updateCartItem} from '../../store/actions/CartActions';
+import {toLinearSpace} from 'react-native-reanimated/lib/typescript/Colors';
 
 type PropsType = NativeStackScreenProps<CartStackParamList, 'CartHome'>;
 
 function CartMainScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const dispatch = useDispatch();
+
   const cartItems = useSelector((state: StoreState): CartCollection => {
     return state.cart.items;
   });
@@ -43,6 +47,15 @@ function CartMainScreen(props: PropsType): JSX.Element {
       items.push(cartItems[pKey]);
     }
     return items;
+  }, [cartItems]);
+
+  const totals = useMemo(() => {
+    const totals = {quantity: 0, amount: 0};
+    for (let pKey in cartItems) {
+      totals.quantity += cartItems[pKey].quantity;
+      totals.amount += cartItems[pKey].quantity * cartItems[pKey].product.price;
+    }
+    return totals;
   }, [cartItems]);
 
   return (
@@ -56,6 +69,17 @@ function CartMainScreen(props: PropsType): JSX.Element {
               product={item.product}
               quantity={item.quantity}
               allowEdit={true}
+              onDecreaseQuantity={() => {
+                if (item.quantity > 1) {
+                  dispatch(updateCartItem(item.product, item.quantity - 1));
+                }
+              }}
+              onIncreaseQuantity={() => {
+                dispatch(updateCartItem(item.product, item.quantity + 1));
+              }}
+              onRemoveItem={() => {
+                dispatch(updateCartItem(item.product, 0));
+              }}
             />
           );
         }}
@@ -64,11 +88,19 @@ function CartMainScreen(props: PropsType): JSX.Element {
         <View style={styles.resumeContainer}>
           <View style={styles.resumeLine}>
             <DefaultText>Total de itens:</DefaultText>
-            <BoldText style={styles.leftColumn}>3</BoldText>
+            <BoldText style={styles.leftColumn}>
+              {totals.quantity.toFixed(0)}
+            </BoldText>
           </View>
           <View style={styles.resumeLine}>
             <DefaultText>Total da compra:</DefaultText>
-            <BoldText style={styles.leftColumn}>R$ 13.50</BoldText>
+            <BoldText style={styles.leftColumn}>
+              {'R$ ' +
+                totals.amount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+            </BoldText>
           </View>
         </View>
         <CustomButton

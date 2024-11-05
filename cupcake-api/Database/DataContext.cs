@@ -54,7 +54,7 @@ namespace cupcake_api.Database
         {
             base.OnModelCreating(modelBuilder);
             //modelBuilder.HasCharSet("utf8mb4_general_ci", DelegationModes.ApplyToAll);
-            var baseTimeStamp = new DateTime(2023, 03, 04);
+            var baseTimeStamp = new DateTime(2024, 11, 01);
 
             modelBuilder.UseGuidCollation(string.Empty);
             modelBuilder.UseCollation("utf8mb4_general_ci");
@@ -110,6 +110,85 @@ namespace cupcake_api.Database
             });
 
             modelBuilder.Entity<User>().HasMany(e => e.Favorites).WithMany(e => e.FavoritedBy);
+
+            modelBuilder
+                .Entity<PaymentMethod>()
+                .HasData(
+                    new PaymentMethod
+                    {
+                        Id = 1,
+                        Name = "Cartão de credito (online)",
+                        Enabled = true,
+                        CreatedAt = baseTimeStamp,
+                        UpdatedAt = baseTimeStamp
+                    }
+                );
+
+            modelBuilder
+                .Entity<PaymentMethod>()
+                .HasData(
+                    new PaymentMethod
+                    {
+                        Id = 2,
+                        Name = "Pix",
+                        Enabled = true,
+                        CreatedAt = baseTimeStamp,
+                        UpdatedAt = baseTimeStamp
+                    }
+                );
+
+            modelBuilder
+                .Entity<PaymentMethod>()
+                .HasData(
+                    new PaymentMethod
+                    {
+                        Id = 3,
+                        Name = "Cartão de credito (na entrega)",
+                        Enabled = true,
+                        CreatedAt = baseTimeStamp,
+                        UpdatedAt = baseTimeStamp
+                    }
+                );
+
+            modelBuilder
+                .Entity<PaymentMethod>()
+                .HasData(
+                    new PaymentMethod
+                    {
+                        Id = 4,
+                        Name = "Em dinheiro na entrega",
+                        Enabled = true,
+                        CreatedAt = baseTimeStamp,
+                        UpdatedAt = baseTimeStamp
+                    }
+                );
+
+            modelBuilder
+                .Entity<DeliveryMethod>()
+                .HasData(
+                    new DeliveryMethod
+                    {
+                        Id = 1,
+                        Name = "Retirada na loja",
+                        Price = 0,
+                        Enabled = true,
+                        CreatedAt = baseTimeStamp,
+                        UpdatedAt = baseTimeStamp
+                    }
+                );
+            modelBuilder
+                .Entity<DeliveryMethod>()
+                .HasData(
+                    new DeliveryMethod
+                    {
+                        Id = 2,
+                        Name = "Entrega por motoboy",
+                        Price = 10,
+                        Enabled = true,
+                        CreatedAt = baseTimeStamp,
+                        UpdatedAt = baseTimeStamp
+                    }
+                );
         }
 
         public DbSet<cupcake_api.Models.Address> Address { get; set; } = default!;

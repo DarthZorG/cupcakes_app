@@ -1,4 +1,4 @@
-import {UploadFile} from './UploadFileResponses';
+import {UploadFile} from './UploadFile';
 
 export interface Product {
   id: number;

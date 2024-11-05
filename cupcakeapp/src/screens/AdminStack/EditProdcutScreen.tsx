@@ -31,7 +31,7 @@ import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
 import PageHeader from '../../components/PageHeader';
 import ProductService from '../../services/ProductService';
-import {Product} from '../../models/ProductResponses';
+import {Product} from '../../models/Product';
 import {useDispatch} from 'react-redux';
 import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 import {APIError} from '../../Errors/APIError';

@@ -10,7 +10,7 @@ using cupcake_api.Models;
 
 namespace cupcake_api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {

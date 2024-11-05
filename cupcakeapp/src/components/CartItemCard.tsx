@@ -18,6 +18,9 @@ import {CartItem} from '../store/reducers/CartReducer';
 
 export interface CartItemCardProps extends CartItem {
   allowEdit: boolean;
+  onIncreaseQuantity?: () => void;
+  onDecreaseQuantity?: () => void;
+  onRemoveItem?: () => void;
 }
 
 const CartItemCard = (props: CartItemCardProps): JSX.Element => {
@@ -66,8 +69,10 @@ const CartItemCard = (props: CartItemCardProps): JSX.Element => {
               <QuantityInput
                 style={{marginRight: 10}}
                 quantity={props.quantity}
+                onDecreaseQuantity={props.onDecreaseQuantity}
+                onIncreaseQuantity={props.onIncreaseQuantity}
               />
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={props.onRemoveItem}>
                 <Material
                   style={{alignItems: 'center', color: '#FF0000'}}
                   name={'trash-can-outline'}

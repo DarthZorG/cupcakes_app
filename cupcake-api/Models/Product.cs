@@ -49,6 +49,6 @@ namespace cupcake_api.Models
         }
 
         [JsonIgnore]
-        public List<User> FavoritedBy { get; set; }
+        public List<User> FavoritedBy { get; set; } = new List<User>();
     }
 }

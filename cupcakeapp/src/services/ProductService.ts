@@ -2,7 +2,7 @@ import {APIError} from '../Errors/APIError';
 import {ErrorResponse, WithRequired} from '../models/GenericAPIResponse';
 import {AuthorizationHeader, BaseService} from './BaseService';
 import {API_URL} from '../config';
-import {Product, ProductListResponse} from '../models/ProductResponses';
+import {Product, ProductListResponse} from '../models/Product';
 
 export default class ProductService extends BaseService {
   static async getProducts(): Promise<ProductListResponse> {

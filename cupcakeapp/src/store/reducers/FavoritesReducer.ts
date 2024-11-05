@@ -1,4 +1,4 @@
-import {Product} from '../../models/ProductResponses';
+import {Product} from '../../models/Product';
 import {
   ADD_FAVORITE,
   FavoriteAction,

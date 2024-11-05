@@ -2,7 +2,7 @@ import {APIError} from '../Errors/APIError';
 import {ErrorResponse} from '../models/GenericAPIResponse';
 import {AuthorizationHeader, BaseService} from './BaseService';
 import {API_URL} from '../config';
-import {ProductListResponse} from '../models/ProductResponses';
+import {ProductListResponse} from '../models/Product';
 
 export default class FavoriteService extends BaseService {
   static async getFavorites(): Promise<ProductListResponse> {

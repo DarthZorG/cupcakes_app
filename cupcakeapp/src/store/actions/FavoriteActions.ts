@@ -1,7 +1,7 @@
 import {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
 import {StoreState} from '../reducers';
-import {Product} from '../../models/ProductResponses';
+import {Product} from '../../models/Product';
 import FavoriteService from '../../services/FavoriteService';
 
 export const ADD_FAVORITE: string = 'ADD_FAVORITE';

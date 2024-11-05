@@ -28,7 +28,7 @@ import {useQuery} from '@tanstack/react-query';
 import ProductService from '../../services/ProductService';
 import {useDispatch, useSelector} from 'react-redux';
 import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
-import {Product} from '../../models/ProductResponses';
+import {Product} from '../../models/Product';
 import {StoreState} from '../../store/reducers';
 import {FavoriteCollection} from '../../store/reducers/FavoritesReducer';
 import {

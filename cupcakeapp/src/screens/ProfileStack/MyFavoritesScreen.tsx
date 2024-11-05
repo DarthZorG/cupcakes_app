@@ -24,7 +24,7 @@ import {WHITE} from '../../config/colors';
 import SearchField from '../../components/SearchField';
 import ProductCard from '../../components/ProductCard';
 import PageHeader from '../../components/PageHeader';
-import { Product } from '../../models/ProductResponses';
+import { Product } from '../../models/Product';
 import { addFavorite, getFavoriteKey, removeFavorite } from '../../store/actions/FavoriteActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreState } from '../../store/reducers';

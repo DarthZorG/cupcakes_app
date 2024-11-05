@@ -4,7 +4,7 @@
  * @format
  */
 
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -27,11 +27,66 @@ import {RadioGroup} from 'react-native-radio-buttons-group';
 import FormRadio from '../../components/FormRadio';
 import FormField from '../../components/FormField';
 import PageHeader from '../../components/PageHeader';
+import {PaymentMethod} from '../../models/PaymentMethod';
+import {DeliveryMethod} from '../../models/DeliveryMethod';
+import {useDispatch} from 'react-redux';
+import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
+import PaymentMethodService from '../../services/PaymentMethodService';
+import {useQuery} from '@tanstack/react-query';
+import DeliveryMethodService from '../../services/DeliveryMethodService';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditOrder'>;
 
 function FinalizeOrderScreen(props: PropsType): JSX.Element {
-  const deliveryMethods = useMemo(
+  const dispatch = useDispatch();
+  const [selectedDelivery, setSelectedDelivery] = useState('1');
+  const [selectedPayment, setSelectedPayment] = useState('1');
+
+  const {data: paymentMethods, isLoading: isLoadingPayments} = useQuery({
+    queryKey: ['paymentMethods'],
+    queryFn: async () => {
+      return await PaymentMethodService.getPaymentMethods();
+    },
+  });
+
+  const {data: deliveryMethods, isLoading: isLoadingDelivery} = useQuery({
+    queryKey: ['deliveryMethods'],
+    queryFn: async () => {
+      return await DeliveryMethodService.getDeliveryMethods();
+    },
+  });
+
+  useEffect(() => {
+    if (isLoadingDelivery || isLoadingPayments) {
+      dispatch(startLoading());
+      return () => {
+        dispatch(stopLoading());
+      };
+    }
+    return undefined;
+  }, [isLoadingDelivery, isLoadingPayments]);
+
+  const deliveryOptions = useMemo(() => {
+    return (
+      deliveryMethods?.map(e => ({
+        id: e.id.toString(),
+        label: e.name,
+        value: e.id.toString(),
+      })) ?? []
+    );
+  }, [deliveryMethods]);
+
+  const paymentOptions = useMemo(() => {
+    return (
+      paymentMethods?.map(e => ({
+        id: e.id.toString(),
+        label: e.name,
+        value: e.id.toString(),
+      })) ?? []
+    );
+  }, [paymentMethods]);
+
+  /*const deliveryMethods = useMemo(
     () => [
       {
         id: '1', // acts as primary key, should be unique and non-empty string
@@ -71,7 +126,7 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
       },
     ],
     [],
-  );
+  ); */
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,14 +135,28 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <FormRadio title={'Entrega:'} options={deliveryMethods} />
+          <FormRadio
+            title={'Entrega:'}
+            options={deliveryOptions}
+            selectedId={selectedDelivery}
+            onChange={delivery => {
+              setSelectedDelivery(delivery);
+            }}
+          />
           <FormField title="CEP" value="80000-000" />
           <FormField title="Rua" value="Rua Antonio de Paula, 400 " />
           <FormField title="Complemento" value="" />
           <FormField title="Bairro" value="Hauer" />
           <FormField title="Cidade" value="Curitba" />
 
-          <FormRadio title={'Metodo de pagamento:'} options={paymentOptions} />
+          <FormRadio
+            title={'Metodo de pagamento:'}
+            options={paymentOptions}
+            selectedId={selectedPayment}
+            onChange={payment => {
+              setSelectedPayment(payment);
+            }}
+          />
           <FormField title="Nome impresso no cartão" value="John Doe" />
           <FormField title="Numero do cartao" value="0000-0000-0000-0000" />
           <FormField title="validade" value="00/00" />
