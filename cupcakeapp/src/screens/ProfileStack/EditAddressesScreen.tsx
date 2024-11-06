@@ -31,6 +31,7 @@ import {useDispatch} from 'react-redux';
 import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 import {APIError} from '../../Errors/APIError';
 import {showAlert} from '../../store/actions/AlertActions';
+import ErrorHelper from '../../Errors/ErrorHelper';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'EditAddress'>;
 
@@ -76,13 +77,7 @@ function EditAddressScreen(props: PropsType): JSX.Element {
       dispatch(stopLoading());
       props.navigation.navigate('MyAddresses');
     } catch (e: any) {
-      dispatch(stopLoading());
-      console.log(e);
-      if (e instanceof APIError) {
-        e.showAlert(dispatch);
-      } else {
-        dispatch(showAlert('Error', e.message));
-      }
+      ErrorHelper.handleError(e, dispatch);
     }
   };
 

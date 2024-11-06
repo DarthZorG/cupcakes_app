@@ -13,7 +13,7 @@ import {BLACK, BLUE, GRAY, WHITE} from '../config/colors';
 import {BoldText, DefaultText} from './StyledTexts';
 
 export type FormLabelProps = {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   title: string;
   value: string;
 };

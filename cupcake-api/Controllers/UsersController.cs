@@ -37,7 +37,6 @@ namespace cupcake_api.Controllers
             //            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
 
             var user = await _context.Users
-                .Include(e => e.Favorites)
                 .Where(r => r.UserName == User.Identity!.Name)
                 .FirstOrDefaultAsync();
 
@@ -78,7 +77,19 @@ namespace cupcake_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, PublicUser user)
         {
-            /*    user.Id = id;
+            var dbUser = await _context.Users.Where(e => e.Id == id).FirstOrDefaultAsync();
+
+            if (dbUser == null)
+            {
+                return NotFound();
+            }
+            dbUser.Email = user.Email;
+            dbUser.FirstName = user.FirstName;
+            dbUser.LastName = user.LastName;
+            dbUser.PhoneNumber = user.PhoneNumber;
+            dbUser.AvatarId = user.AvatarId;
+
+            user.Id = id;
     
                 _context.Entry(user).State = EntityState.Modified;
     
@@ -97,7 +108,7 @@ namespace cupcake_api.Controllers
                         throw;
                     }
                 }
-             */
+            
             return NoContent();
         }
 

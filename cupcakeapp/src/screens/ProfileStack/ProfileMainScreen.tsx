@@ -4,7 +4,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -24,12 +24,19 @@ import MenuItem from '../../components/MenuItem';
 import CustomButton from '../../components/CustomButton';
 import {BoldText} from '../../components/StyledTexts';
 import PageHeader from '../../components/PageHeader';
+import {IUser} from '../../models/User';
+import {useDispatch} from 'react-redux';
+import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
+import UserService from '../../services/UsersService';
+import {APIError} from '../../Errors/APIError';
+import {showAlert} from '../../store/actions/AlertActions';
+import ErrorHelper from '../../Errors/ErrorHelper';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'ProfileHome'>;
 
 function ProfileMainScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+  
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };

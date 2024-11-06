@@ -4,7 +4,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -26,10 +26,50 @@ import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
 import PageHeader from '../../components/PageHeader';
 import FormLabel from '../../components/FormLabel';
+import {useDispatch} from 'react-redux';
+import {IUser} from '../../models/User';
+import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
+import UserService from '../../services/UsersService';
+import ErrorHelper from '../../Errors/ErrorHelper';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyProfile'>;
 
 function MyProfileScreen(props: PropsType): JSX.Element {
+  const dispatch = useDispatch();
+  const [user, setUser] = useState<IUser>({
+    id: '',
+    userName: '',
+    lastName: '',
+    firstName: '',
+    email: '',
+  });
+
+  const loadUser = async (): Promise<void> => {
+    try {
+      dispatch(startLoading());
+      const data = await UserService.getCurrentUser();
+      setUser(data);
+      dispatch(stopLoading());
+    } catch (e: any) {
+      ErrorHelper.handleError(e, dispatch);
+    }
+  };
+
+  useEffect(() => {
+    loadUser().catch(() => {});
+  }, []);
+
+  const saveUser = async (): Promise<void> => {
+    try {
+      dispatch(startLoading());
+      await UserService.updateUser(user.id, user);
+      dispatch(stopLoading());
+      props.navigation.navigate('ProfileHome');
+    } catch (e: any) {
+      ErrorHelper.handleError(e, dispatch);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="O Meu Perfil" />
@@ -37,14 +77,37 @@ function MyProfileScreen(props: PropsType): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <FormLabel title="E-mail" value="test@cruzeirodosul.com.br" />
-          <FormField title="Nome" value="Mauro" />
-          <FormField title="Sobrenome" value="Minoro" />
-          <FormField title="Telefone" value="(41) 0000-0000" />
+          <FormLabel title="E-mail" value={user.email} />
+          <FormField
+            title="Nome"
+            value={user.firstName}
+            onChange={text => {
+              setUser({...user, firstName: text});
+            }}
+          />
+          <FormField
+            title="Sobrenome"
+            value={user.lastName}
+            onChange={text => {
+              setUser({...user, lastName: text});
+            }}
+          />
+          <FormField
+            title="Telefone"
+            value={user.phoneNumber ?? ''}
+            onChange={text => {
+              setUser({...user, phoneNumber: text});
+            }}
+          />
         </View>
       </ScrollView>
       <View>
-        <CustomButton title="Salvar" onPress={() => {}} />
+        <CustomButton
+          title="Salvar"
+          onPress={() => {
+            saveUser();
+          }}
+        />
       </View>
     </SafeAreaView>
   );

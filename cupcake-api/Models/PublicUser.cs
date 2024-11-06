@@ -11,7 +11,7 @@ namespace cupcake_api.Models
         public string LastName { get; set; }
 
         [SwaggerReadOnly]
-        public PublicFile Avatar { get; set; }
+        public PublicFile? Avatar { get; set; }
 
         public string? Email { get; set; }
 
@@ -19,7 +19,6 @@ namespace cupcake_api.Models
 
         public long? AvatarId { get; set; }
 
-        public List<Product> Favorites { get; set; }
 
         public static implicit operator PublicUser(User u) =>
             new PublicUser
@@ -32,7 +31,6 @@ namespace cupcake_api.Models
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
                 AvatarId = u.AvatarId,
-                Favorites = u.Favorites,
             };
     }
 }
