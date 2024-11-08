@@ -17,6 +17,7 @@ namespace cupcake_api.Models
 
         public bool Enabled { get; set; }
 
+        public bool RequireAddress { get; set; }  
        
     }
 }

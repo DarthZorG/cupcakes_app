@@ -88,26 +88,7 @@ namespace cupcake_api.Controllers
             dbUser.LastName = user.LastName;
             dbUser.PhoneNumber = user.PhoneNumber;
             dbUser.AvatarId = user.AvatarId;
-
-            user.Id = id;
-    
-                _context.Entry(user).State = EntityState.Modified;
-    
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+            _context.SaveChanges();
             
             return NoContent();
         }

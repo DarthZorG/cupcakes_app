@@ -2,5 +2,6 @@ export interface DeliveryMethod {
   id: number;
   name: string;
   price: number;
-  enabled: bool;
+  enabled: boolean;
+  requireAddress: boolean;
 }

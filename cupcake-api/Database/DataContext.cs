@@ -120,7 +120,8 @@ namespace cupcake_api.Database
                         Name = "Cartão de credito (online)",
                         Enabled = true,
                         CreatedAt = baseTimeStamp,
-                        UpdatedAt = baseTimeStamp
+                        UpdatedAt = baseTimeStamp,
+                        RequireCardInfo = true
                     }
                 );
 
@@ -133,7 +134,8 @@ namespace cupcake_api.Database
                         Name = "Pix",
                         Enabled = true,
                         CreatedAt = baseTimeStamp,
-                        UpdatedAt = baseTimeStamp
+                        UpdatedAt = baseTimeStamp,
+                        RequireCardInfo = false
                     }
                 );
 
@@ -146,7 +148,8 @@ namespace cupcake_api.Database
                         Name = "Cartão de credito (na entrega)",
                         Enabled = true,
                         CreatedAt = baseTimeStamp,
-                        UpdatedAt = baseTimeStamp
+                        UpdatedAt = baseTimeStamp,
+                        RequireCardInfo = false
                     }
                 );
 
@@ -159,7 +162,8 @@ namespace cupcake_api.Database
                         Name = "Em dinheiro na entrega",
                         Enabled = true,
                         CreatedAt = baseTimeStamp,
-                        UpdatedAt = baseTimeStamp
+                        UpdatedAt = baseTimeStamp,
+                        RequireCardInfo = false
                     }
                 );
 
@@ -173,7 +177,8 @@ namespace cupcake_api.Database
                         Price = 0,
                         Enabled = true,
                         CreatedAt = baseTimeStamp,
-                        UpdatedAt = baseTimeStamp
+                        UpdatedAt = baseTimeStamp,
+                        RequireAddress = false,
                     }
                 );
             modelBuilder
@@ -186,7 +191,8 @@ namespace cupcake_api.Database
                         Price = 10,
                         Enabled = true,
                         CreatedAt = baseTimeStamp,
-                        UpdatedAt = baseTimeStamp
+                        UpdatedAt = baseTimeStamp,
+                        RequireAddress = true,
                     }
                 );
         }

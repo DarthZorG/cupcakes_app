@@ -12,18 +12,18 @@ import {
 import {BLACK, GRAY, LIGHT_GRAY, WHITE} from '../config/colors';
 import {BoldText, DefaultText} from './StyledTexts';
 
-
 export interface MenuItemProps {
   title: string;
   description?: string;
   hasRightArrow?: boolean;
   hasBottomBorder?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   arrowStyle?: StyleProp<ImageStyle>;
   testID?: string;
   disabled?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 // eslint-disable-next-line no-undef
 export const MenuItem = (props: MenuItemProps): JSX.Element => {
@@ -44,34 +44,45 @@ export const MenuItem = (props: MenuItemProps): JSX.Element => {
   }
   const description = props.description ?? '';
 
-  return (
-    <TouchableOpacity
-      disabled={props.disabled}
-      onPress={props.onPress}
-      testID={props.testID}
-      style={{width: '100%'}}>
-      <View style={[styles.mainContainer]}>
-        <View
-          style={[
-            styles.containerStyle,
-            hasBottomBorder ? styles.bottomBorder : null,
-            props.style,
-          ]}>
-          <View style={styles.textsContainer}>
-            <BoldText style={[styles.titleStyle, props.textStyle]}>
-              {props.title}
-            </BoldText>
-            {description !== '' && (
-              <DefaultText style={[styles.descriptionStyle]}>
-                {description}
-              </DefaultText>
-            )}
-          </View>
-          {rightArrow}
-        </View>
+  const mainContent = (
+    <View
+      style={[
+        styles.containerStyle,
+        hasBottomBorder ? styles.bottomBorder : null,
+        props.style,
+      ]}>
+      <View style={styles.textsContainer}>
+        <BoldText style={[styles.titleStyle, props.textStyle]}>
+          {props.title}
+        </BoldText>
+        {description !== '' && (
+          <DefaultText style={[styles.descriptionStyle]}>
+            {description}
+          </DefaultText>
+        )}
       </View>
-    </TouchableOpacity>
+      {rightArrow}
+    </View>
   );
+  if (props.onPress) {
+    return (
+      <View style={[styles.mainContainer, props.containerStyle]}>
+        <TouchableOpacity
+          disabled={props.disabled}
+          onPress={props.onPress}
+          testID={props.testID}
+          style={{width: '100%'}}>
+          {mainContent}
+        </TouchableOpacity>
+      </View>
+    );
+  } else {
+    return (
+      <View style={[styles.mainContainer, props.containerStyle]}>
+        {mainContent}
+      </View>
+    );
+  }
 };
 
 export default MenuItem;

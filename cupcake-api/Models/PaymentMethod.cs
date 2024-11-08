@@ -13,8 +13,8 @@ namespace cupcake_api.Models
         [MaxLength(100)]
         public string Name { get; set; }
 
-
         public bool Enabled { get; set; }
 
+        public bool RequireCardInfo { get; set; }
     }
 }
