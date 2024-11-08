@@ -98,7 +98,7 @@ namespace cupcake_api.Authorization
             User? testUser = await userManager.FindByNameAsync("admin@cupcake-app.com");
             if (testUser == null)
             {
-                testUser = new User { FirstName = "Admin", LastName = "Cupcake", UserName = "admin@cupcake-app.com", Email = "\"admin@cupcake-app.com" };
+                testUser = new User { FirstName = "Admin", LastName = "Cupcake", UserName = "admin@cupcake-app.com", Email = "admin@cupcake-app.com" };
                 await userManager.CreateAsync(testUser, "Cup123!");
                 await userManager.AddToRoleAsync(testUser, UserRoles.Admin);
             }

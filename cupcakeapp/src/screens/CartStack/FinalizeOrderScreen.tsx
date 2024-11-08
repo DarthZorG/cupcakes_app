@@ -29,7 +29,7 @@ import FormField from '../../components/FormField';
 import PageHeader from '../../components/PageHeader';
 import {PaymentMethod} from '../../models/PaymentMethod';
 import {DeliveryMethod} from '../../models/DeliveryMethod';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 import PaymentMethodService from '../../services/PaymentMethodService';
 import {useQuery} from '@tanstack/react-query';
@@ -38,6 +38,14 @@ import AddressService from '../../services/AddressService';
 import {Dropdown} from 'react-native-element-dropdown';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Address} from '../../models/Address';
+import AddressPanel from '../../components/AddressPanel';
+import {CardDetails} from '../../models/CardDetails';
+import OrderService from '../../services/OrderService';
+import CardPanel from '../../components/CardPanel';
+import {Order, OrderItem} from '../../models/Order';
+import {StoreState} from '../../store/reducers';
+import {CartCollection, CartItem} from '../../store/reducers/CartReducer';
+import ErrorHelper from '../../Errors/ErrorHelper';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditOrder'>;
 
@@ -46,6 +54,16 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
   const [selectedDelivery, setSelectedDelivery] = useState('1');
   const [selectedPayment, setSelectedPayment] = useState('1');
   const [selectedAddress, setSelectedAddress] = useState<Address>();
+  const [editingAddress, setEditingAddress] = useState<Address>(
+    AddressService.getEmptyAddress(),
+  );
+  const [cardDetails, setCardDetails] = useState<CardDetails>(
+    OrderService.getEmptyCardDetails(),
+  );
+
+  const cartItems = useSelector((state: StoreState): CartCollection => {
+    return state.cart.items;
+  });
 
   const {data: paymentMethods, isLoading: isLoadingPayments} = useQuery({
     queryKey: ['paymentMethods'],
@@ -109,12 +127,57 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
     return paymentMethods?.find(e => e.id.toString() === selectedPayment);
   }, [selectedPayment, paymentMethods]);
 
+  const getAddressId = async () => {
+    var addr = addresses?.find(e => AddressService.isSame(e, editingAddress));
+    if (addr != null) {
+      return addr.id;
+    }
+    const newAddr = await AddressService.addAddress(editingAddress);
+    return newAddr.id;
+  };
+
+  const saveOrder = async () => {
+    try {
+      dispatch(startLoading());
+      const items: OrderItem[] = [];
+      for (let pKey in cartItems) {
+        items.push({
+          productId: cartItems[pKey].product.id,
+          quantity: cartItems[pKey].quantity,
+        });
+      }
+
+      const newOrder: Order = {
+        id: 0,
+        paymentMethodId: paymentMode?.id,
+        deliveryMethodId: deliveryMode?.id,
+        totalPrice: 0,
+        items: items,
+      };
+
+      if (paymentMode?.requireCardInfo) {
+        newOrder.cardHolderName = cardDetails.holderName;
+        newOrder.cardNumber = cardDetails.number;
+        newOrder.cardValidTill = cardDetails.validTill;
+        newOrder.cardCVV = cardDetails.cvv;
+      }
+
+      if (deliveryMode?.requireAddress) {
+        newOrder.addressId = await getAddressId();
+      }
+      await OrderService.addOrder(newOrder);
+      dispatch(stopLoading());
+    } catch (e: any) {
+      console.log(e);
+      ErrorHelper.handleError(e, dispatch);
+    }
+  };
+
   const renderItem = (item: Address) => {
-    console.log(item.id === selectedAddress?.id);
     return (
       <View style={styles.item}>
         <MenuItem
-          title={item.address1}
+          title={item.address}
           description={
             '' +
             (item.zipCode ?? '') +
@@ -135,6 +198,12 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
       </View>
     );
   };
+
+  useEffect(() => {
+    if (selectedAddress != null) {
+      setEditingAddress({...selectedAddress});
+    }
+  }, [selectedAddress]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -163,7 +232,7 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
                 iconStyle={styles.iconStyle}
                 data={addresses ?? []}
                 maxHeight={300}
-                labelField="address1"
+                labelField="address"
                 valueField="id"
                 placeholder="Escolha um endereço"
                 searchPlaceholder="Search..."
@@ -184,12 +253,12 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
                 )}
                 renderItem={renderItem}
               />
-
-              <FormField title="CEP" value="80000-000" />
-              <FormField title="Rua" value="Rua Antonio de Paula, 400 " />
-              <FormField title="Complemento" value="" />
-              <FormField title="Bairro" value="Hauer" />
-              <FormField title="Cidade" value="Curitba" />
+              <AddressPanel
+                address={editingAddress}
+                onChange={(data: Address) => {
+                  setEditingAddress(data);
+                }}
+              />
             </>
           )}
           <FormRadio
@@ -201,17 +270,22 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
             }}
           />
           {paymentMode?.requireCardInfo === true && (
-            <>
-              <FormField title="Nome impresso no cartão" value="John Doe" />
-              <FormField title="Numero do cartao" value="0000-0000-0000-0000" />
-              <FormField title="validade" value="00/00" />
-              <FormField title="CVV" value="000" />
-            </>
+            <CardPanel
+              card={cardDetails}
+              onChange={(data: CardDetails) => {
+                setCardDetails(data);
+              }}
+            />
           )}
         </View>
       </ScrollView>
       <View>
-        <CustomButton title="Finalizar" onPress={() => {}} />
+        <CustomButton
+          title="Finalizar"
+          onPress={() => {
+            saveOrder();
+          }}
+        />
       </View>
     </SafeAreaView>
   );

@@ -78,10 +78,108 @@ namespace cupcake_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
+            var user = await _context.Users
+                .Where(r => r.UserName == User.Identity!.Name)
+                .FirstOrDefaultAsync();
+
+            if (order.UserId == null)
+            {
+                order.UserId = user.Id;
+            }
+
+            //perfom data validation
+            if (order.PaymentMethodId == null)
+            {
+                ModelState.AddModelError(
+                    nameof(order.PaymentMethodId),
+                    "PaymentMethodId is required when creating a new Order"
+                );
+            }
+            if (order.DeliveryMethodId == null)
+            {
+                ModelState.AddModelError(
+                    nameof(order.DeliveryMethodId),
+                    "DeliveryMethodId is required when creating a new Order"
+                );
+            }
+            if (order.Items == null || order.Items.Count < 1)
+            {
+                ModelState.AddModelError(
+                    nameof(order.Items),
+                    "You need to have at least one product when creating a new Order"
+                );
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            PaymentMethod? paymentMethod = _context.PaymentMethod
+                .Where(e => e.Id == order.PaymentMethodId)
+                .FirstOrDefault();
+            DeliveryMethod? deliveryMethod = _context.DeliveryMethod
+                .Where(e => e.Id == order.DeliveryMethodId)
+                .FirstOrDefault();
+
+            if (paymentMethod == null)
+            {
+                ModelState.AddModelError(
+                    nameof(order.PaymentMethodId),
+                    "Invalid PaymentMethodId specified"
+                );
+            }
+            else
+            {
+                if (paymentMethod.RequireCardInfo)
+                {
+                    if (order.CardHolderName == null)
+                    {
+                        ModelState.AddModelError(nameof(order.CardHolderName), "Is required");
+                    }
+
+                    if (order.CardNumber == null)
+                    {
+                        ModelState.AddModelError(nameof(order.CardNumber), "Is required");
+                    }
+
+                    if (order.CardValidTill == null)
+                    {
+                        ModelState.AddModelError(nameof(order.CardValidTill), "Is required");
+                    }
+
+                    if (order.CardCVV == null)
+                    {
+                        ModelState.AddModelError(nameof(order.CardCVV), "Is required");
+                    }
+                }
+            }
+            if (deliveryMethod == null)
+            {
+                ModelState.AddModelError(
+                    nameof(order.DeliveryMethodId),
+                    "Invalid DeliveryMethodId specified"
+                );
+            }
+            else
+            {
+                if (deliveryMethod.RequireAddress)
+                {
+                    if (order.AddressId == null)
+                    {
+                        ModelState.AddModelError(nameof(order.AddressId), "Is required");
+                    }
+                }
+            }
+
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            try
+            {
+                return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         // DELETE: api/Orders/5

@@ -195,6 +195,7 @@ namespace cupcake_api.Database
                         RequireAddress = true,
                     }
                 );
+            modelBuilder.Entity<OrderItem>().HasKey(e => new { e.OrderId, e.ProductId });
         }
 
         public DbSet<cupcake_api.Models.Address> Address { get; set; } = default!;
@@ -202,5 +203,7 @@ namespace cupcake_api.Database
         public DbSet<cupcake_api.Models.Order> Order { get; set; } = default!;
         public DbSet<cupcake_api.Models.PaymentMethod> PaymentMethod { get; set; } = default!;
         public DbSet<cupcake_api.Models.Product> Product { get; set; } = default!;
+
+        public DbSet<cupcake_api.Models.OrderItem> OrderItems { get; set; } = default!;
     }
 }

@@ -45,7 +45,6 @@ export default class ProductService extends BaseService {
     } catch (e) {
       //ignore this error now
     }
-    console.log(jsonResponse);
     if (response.ok) {
       return;
     } else {

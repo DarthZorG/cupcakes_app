@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cupcake_api.Database;
 
@@ -11,9 +12,11 @@ using cupcake_api.Database;
 namespace cupcake_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241108181847_AddCardDetailsToOrders")]
+    partial class AddCardDetailsToOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -345,24 +348,6 @@ namespace cupcake_api.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("cupcake_api.Models.OrderItem", b =>
-                {
-                    b.Property<long?>("OrderId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderItems");
-                });
-
             modelBuilder.Entity("cupcake_api.Models.PaymentMethod", b =>
                 {
                     b.Property<long>("Id")
@@ -471,6 +456,9 @@ namespace cupcake_api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<long?>("OrderId")
+                        .HasColumnType("bigint");
+
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
@@ -483,6 +471,8 @@ namespace cupcake_api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Product");
                 });
@@ -701,30 +691,15 @@ namespace cupcake_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("cupcake_api.Models.OrderItem", b =>
-                {
-                    b.HasOne("cupcake_api.Models.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("cupcake_api.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("cupcake_api.Models.Product", b =>
                 {
                     b.HasOne("cupcake_api.Models.UploadFile", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
+
+                    b.HasOne("cupcake_api.Models.Order", null)
+                        .WithMany("products")
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Image");
                 });
@@ -740,7 +715,7 @@ namespace cupcake_api.Migrations
 
             modelBuilder.Entity("cupcake_api.Models.Order", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("products");
                 });
 #pragma warning restore 612, 618
         }

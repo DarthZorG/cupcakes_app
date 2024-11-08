@@ -64,7 +64,6 @@ export class APIError extends Error {
   }
 
   showAlert(dispatch: Dispatch<any>, buttons?: AlertPopupButton[]): void {
-    console.log({...this});
     console.log('errors:', this.apiResponse?.errors);
 
     let errorMessage = 'Network error';

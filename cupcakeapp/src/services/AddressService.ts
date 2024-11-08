@@ -42,7 +42,6 @@ export default class AddressService extends BaseService {
     } catch (e) {
       //ignore this error now
     }
-    console.log(jsonResponse);
     if (response.ok) {
       return;
     } else {
@@ -92,5 +91,34 @@ export default class AddressService extends BaseService {
     } else {
       throw new APIError(jsonResponse as ErrorResponse, response);
     }
+  }
+
+  static getEmptyAddress(): Address {
+    return {
+      id: 0,
+      address: '',
+      addressExtended: '',
+      neighborhood: '',
+      city: '',
+      state: '',
+      zipCode: '',
+    } as Address;
+  }
+
+  static isSame(a: Address, b: Address): boolean {
+    const allProps: Address = {...a, ...b};
+
+    for (let propName in allProps) {
+      if (propName === 'id') {
+        continue;
+      }
+      if (
+        String(a[propName as keyof Address] ?? '').trim() !==
+        String(b[propName as keyof Address] ?? '').trim()
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 }

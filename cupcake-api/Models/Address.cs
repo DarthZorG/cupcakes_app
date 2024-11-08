@@ -1,6 +1,7 @@
 ﻿using cupcake_api.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace cupcake_api.Models
 {
@@ -10,6 +11,7 @@ namespace cupcake_api.Models
         [SwaggerReadOnly]
         public long Id { get; internal set; }
 
+        [JsonPropertyName("address")]
         public string? Address1 { get; set; }
 
         public string? AddressExtended { get; set; }
@@ -21,7 +23,12 @@ namespace cupcake_api.Models
 
         [MaxLength(20)]
         public String? ZipCode { get; set; }
+        
+        [MaxLength(100)]
+        public string? UserId { get; set; }
 
-      
+        [JsonIgnore]
+        [ForeignKey(nameof(UserId))]
+        public User? User { get; set; }
     }
 }

@@ -4,7 +4,7 @@
  * @format
  */
 
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   FlatList,
@@ -28,7 +28,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import PageHeader from '../../components/PageHeader';
 import {useQuery} from '@tanstack/react-query';
 import AddressService from '../../services/AddressService';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyAddresses'>;
 
@@ -86,10 +86,16 @@ function MyAddressesScreen(props: PropsType): JSX.Element {
         renderItem={({item}) => {
           return (
             <MenuItem
-              title={item.address1}
+              title={item.address}
               description={
-                (item.zipCode + ' ' + item.neighborhood,
-                +', ' + item.city + ' ' + item.state)
+                '' +
+                (item.zipCode ?? '') +
+                ' ' +
+                (item.neighborhood ?? '') +
+                ', ' +
+                (item.city ?? '') +
+                ' ' +
+                (item.state ?? '')
               }
               onPress={() => {
                 props.navigation.navigate('EditAddress', {address: item});

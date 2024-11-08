@@ -80,7 +80,6 @@ function EditProductScreen(props: PropsType): JSX.Element {
       newItem.sugarFree = sugarFree;
       newItem.lactoseFree = lactoseFree;
 
-      console.log(newItem);
       if (newItem.id <= 0) {
         //new item
 
@@ -102,12 +101,10 @@ function EditProductScreen(props: PropsType): JSX.Element {
   };
 
   const pickPicture = async (): Promise<void> => {
-    console.log('e');
     const results = await launchCamera({
       mediaType: 'photo',
       cameraType: 'back',
     });
-    console.log(results);
     if (results.didCancel) {
       return;
     }
@@ -133,7 +130,6 @@ function EditProductScreen(props: PropsType): JSX.Element {
         source.height = source.width;
       }
     }
-    console.log(source);
     setPicture(source.uri);
   };
 

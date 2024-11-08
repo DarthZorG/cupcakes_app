@@ -25,7 +25,9 @@ namespace cupcake_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
-            return await _context.Address.ToListAsync();
+            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
+
+            return await _context.Address.Where(e => e.UserId == user.Id).ToListAsync();
         }
 
         // GET: api/Addresses/5
@@ -47,12 +49,24 @@ namespace cupcake_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(long id, Address address)
         {
+            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
+
             if (id != address.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(address).State = EntityState.Modified;
+            var oriAddress = await _context.Address.FindAsync(address.Id);
+            if (oriAddress == null)
+            {
+                return NotFound();
+            }
+            if (oriAddress.UserId != user.Id)
+            {
+                return Forbid();
+            }
+
+            _context.Entry(oriAddress).CurrentValues.SetValues(address);
 
             try
             {
@@ -78,6 +92,10 @@ namespace cupcake_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
+            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
+
+            address.UserId = user.Id;
+
             _context.Address.Add(address);
             await _context.SaveChangesAsync();
 
@@ -88,6 +106,18 @@ namespace cupcake_api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAddress(long id)
         {
+            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
+
+            var oriAddress = await _context.Address.FindAsync(id);
+            if (oriAddress == null)
+            {
+                return NotFound();
+            }
+            if (oriAddress.UserId != user.Id)
+            {
+                return Forbid();
+            }
+
             var address = await _context.Address.FindAsync(id);
             if (address == null)
             {
