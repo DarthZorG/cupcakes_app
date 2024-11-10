@@ -17,6 +17,11 @@ export function getFavoriteKey(product: Product): string {
   return '#' + product.id;
 }
 
+export const resetFavorites = (): FavoriteAction => ({
+  type: SET_FAVORITES,
+  favorites: [],
+});
+
 export const addFavorite = (
   product: Product,
 ): ThunkAction<Promise<void>, StoreState, {}, FavoriteAction> => {
@@ -54,7 +59,6 @@ export const removeFavorite = (
     });
   };
 };
-
 
 export const loadFavorites = (): ThunkAction<
   Promise<void>,

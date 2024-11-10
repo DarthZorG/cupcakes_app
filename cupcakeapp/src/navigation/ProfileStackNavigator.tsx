@@ -43,8 +43,8 @@ const ProfileStackNavigator = (): JSX.Element => {
       <ProfileStack.Screen name={'EditAddress'} component={EditAddressScreen} />
       <ProfileStack.Screen name={'MyProfile'} component={MyProfileScreen} />
       <ProfileStack.Screen name={'MyFavorites'} component={MyFavoritesScreen} />
-      <ProfileStack.Screen name={'Login'} component={LoginScreen} />
-      <ProfileStack.Screen name={'Register'} component={RegisterScreen} />
+    { /*  <ProfileStack.Screen name={'Login'} component={LoginScreen} />
+      <ProfileStack.Screen name={'Register'} component={RegisterScreen} /> */}
     </ProfileStack.Navigator>
   );
 };

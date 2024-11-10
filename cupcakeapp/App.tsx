@@ -35,7 +35,10 @@ import {
 } from './src/store/actions/AuthActions';
 import AuthService from './src/services/AuthService';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {loadFavorites} from './src/store/actions/FavoriteActions';
+import {
+  loadFavorites,
+  resetFavorites,
+} from './src/store/actions/FavoriteActions';
 import UserService from './src/services/UsersService';
 
 const queryClient = new QueryClient();
@@ -150,6 +153,7 @@ function MainApp(): React.JSX.Element {
       dispatch(loadFavorites());
     } else {
       dispatch(setAdmin(false));
+      dispatch(resetFavorites());
     }
   }, [isAuthenticated]);
 

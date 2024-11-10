@@ -37,7 +37,7 @@ const getTabBarStyle = (
 
 const BottomTabNavigator = (): JSX.Element => {
   const isAuthenticated = useSelector((state: StoreState): boolean => {
-    return true; //state.auth.token != null;
+    return state.auth.token != null;
   });
   const isAdmin = useSelector((state: StoreState): boolean => {
     return state.auth.isAdmin ?? false;

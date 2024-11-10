@@ -31,14 +31,33 @@ import UserService from '../../services/UsersService';
 import {APIError} from '../../Errors/APIError';
 import {showAlert} from '../../store/actions/AlertActions';
 import ErrorHelper from '../../Errors/ErrorHelper';
+import {logout} from '../../store/actions/AuthActions';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'ProfileHome'>;
 
 function ProfileMainScreen(props: PropsType): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-  
+  const dispatch = useDispatch();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  const onLogout = () => {
+    dispatch(
+      showAlert('Sair', 'Quer realmente sair da conta?', [
+        {
+          text: 'Não',
+          onPress: () => {},
+          isCancelButton: true,
+        },
+        {
+          text: 'Sim',
+          onPress: () => {
+            dispatch(logout());
+          },
+        },
+      ]),
+    );
   };
 
   return (
@@ -75,12 +94,7 @@ function ProfileMainScreen(props: PropsType): JSX.Element {
         </View>
       </ScrollView>
       <View>
-        <CustomButton
-          title="Sair da conta"
-          onPress={() => {
-            props.navigation.navigate('Login');
-          }}
-        />
+        <CustomButton title="Sair da conta" onPress={onLogout} />
       </View>
     </SafeAreaView>
   );
