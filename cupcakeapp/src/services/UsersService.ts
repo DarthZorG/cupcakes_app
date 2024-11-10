@@ -12,17 +12,7 @@ export default class UserService extends BaseService {
         ...this.getCommonHeaders(AuthorizationHeader.Required),
       },
     });
-    let jsonResponse: IUser | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as IUser;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<IUser>(response);
   }
 
   static async updateUser(userId: string, data: IUser): Promise<void> {
@@ -36,17 +26,7 @@ export default class UserService extends BaseService {
         body: JSON.stringify(data),
       },
     );
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
   /*
   static async addAddress(data: Address): Promise<Address> {

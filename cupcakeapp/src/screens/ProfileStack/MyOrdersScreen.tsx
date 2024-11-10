@@ -7,6 +7,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -24,23 +25,37 @@ import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
 import OrderCard from '../../components/OrderCard';
 import PageHeader from '../../components/PageHeader';
+import OrderService from '../../services/OrderService';
+import {useQuery} from '@tanstack/react-query';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'MyOrders'>;
 
 function MyOrdersScreen(props: PropsType): JSX.Element {
+  const {
+    data: orders,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      return await OrderService.getOrders();
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="Os Meus Pedidos" />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollview}>
-
-        <View style={styles.innerContainer}>
-          <OrderCard showDetails={true}/>
-          <OrderCard />
-
-        </View>
-      </ScrollView>
+      <FlatList
+        style={styles.scrollview}
+        data={orders}
+        renderItem={({item}) => {
+          return <OrderCard order={item} />;
+        }}
+        refreshing={isLoading}
+        onRefresh={() => {
+          refetch();
+        }}
+      />
     </SafeAreaView>
   );
 }

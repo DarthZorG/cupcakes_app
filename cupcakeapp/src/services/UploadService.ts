@@ -44,16 +44,6 @@ export default class UploadService extends BaseService {
       },
       body: bodyFormData,
     });
-    let jsonResponse: UploadFileResponse | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as UploadFileResponse;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<UploadFileResponse>(response);
   }
 }

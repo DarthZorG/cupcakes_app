@@ -20,15 +20,13 @@ namespace cupcake_api.Controllers
     [ApiController]
     [Authorize]
     [Produces("application/json")]
-    public class UploadsController : ControllerBase
+    public class UploadsController : AuthorizedController
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly DataContext _context;
 
-        public UploadsController(IWebHostEnvironment webHostEnvironment, DataContext context)
+        public UploadsController(IWebHostEnvironment webHostEnvironment, DataContext context) : base(context)
         {
             _webHostEnvironment = webHostEnvironment;
-            _context = context;
         }
 
         public static string GetBaseUri(HttpRequest request)
@@ -55,7 +53,6 @@ namespace cupcake_api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PublicFile?>> GetFile(long id)
         {
-            //User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
             var item = await _context.UploadedFiles.FindAsync(id);
 
             if (item == null)
@@ -86,7 +83,7 @@ namespace cupcake_api.Controllers
                 _webHostEnvironment.WebRootPath,
                 PublicFileEx.GetUploadPath().Replace('/', Path.DirectorySeparatorChar)
             );
-            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
+
             if (file.Length <= 0)
                 return BadRequest();
 
@@ -112,7 +109,7 @@ namespace cupcake_api.Controllers
             f.RealName = uniqueFileName;
             f.FileName = originalFileName;
             f.CreatedTS = new DateTime();
-            f.CreatedBy = appUser.Id;
+            f.CreatedBy = CurrentUser.Id;
             _context.UploadedFiles.Add(f);
             await _context.SaveChangesAsync();
             results = f;
@@ -140,7 +137,6 @@ namespace cupcake_api.Controllers
                 _webHostEnvironment.WebRootPath,
                 PublicFileEx.GetUploadPath().Replace('/', Path.DirectorySeparatorChar)
             );
-            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
             if (file.Length <= 0)
                 return BadRequest();
             var sourceFile = await _context.UploadedFiles.FindAsync(id);
@@ -148,7 +144,7 @@ namespace cupcake_api.Controllers
             {
                 return NotFound();
             }
-            if (sourceFile.CreatedBy != appUser.Id)
+            if (sourceFile.CreatedBy != CurrentUser.Id)
             {
                 return Forbid();
             }
@@ -205,14 +201,13 @@ namespace cupcake_api.Controllers
                 _webHostEnvironment.WebRootPath,
                 PublicFileEx.GetUploadPath().Replace('/', Path.DirectorySeparatorChar)
             );
-            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
 
             var sourceFile = await _context.UploadedFiles.FindAsync(id);
             if (sourceFile == null)
             {
                 return NotFound();
             }
-            if (sourceFile.CreatedBy != appUser.Id)
+            if (sourceFile.CreatedBy != CurrentUser.Id)
             {
                 return Forbid();
             }

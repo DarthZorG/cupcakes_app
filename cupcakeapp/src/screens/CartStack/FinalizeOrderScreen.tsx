@@ -42,7 +42,7 @@ import AddressPanel from '../../components/AddressPanel';
 import {CardDetails} from '../../models/CardDetails';
 import OrderService from '../../services/OrderService';
 import CardPanel from '../../components/CardPanel';
-import {Order, OrderItem} from '../../models/Order';
+import {NewOrder, Order, OrderItem} from '../../models/Order';
 import {StoreState} from '../../store/reducers';
 import {CartCollection, CartItem} from '../../store/reducers/CartReducer';
 import ErrorHelper from '../../Errors/ErrorHelper';
@@ -103,7 +103,14 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
     return (
       deliveryMethods?.map(e => ({
         id: e.id.toString(),
-        label: e.name,
+        label:
+          e.name +
+          ' (R$ ' +
+          e.price.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) +
+          ')',
         value: e.id.toString(),
       })) ?? []
     );
@@ -147,11 +154,9 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
         });
       }
 
-      const newOrder: Order = {
-        id: 0,
-        paymentMethodId: paymentMode?.id,
-        deliveryMethodId: deliveryMode?.id,
-        totalPrice: 0,
+      const newOrder: NewOrder = {
+        paymentMethodId: paymentMode?.id ?? -1,
+        deliveryMethodId: deliveryMode?.id ?? -1,
         items: items,
       };
 

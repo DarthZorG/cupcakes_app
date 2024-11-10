@@ -1,3 +1,6 @@
+import { APIError } from '../Errors/APIError';
+import {ErrorResponse} from '../models/GenericAPIResponse';
+
 export enum AuthorizationHeader {
   None,
   Optional,
@@ -20,6 +23,20 @@ export class BaseService {
 
   static setToken(token: string | null) {
     authToken = token;
+  }
+
+  static async handleResponse<T>(response: Response): Promise<T> {
+    let jsonResponse: T | ErrorResponse | null = null;
+    try {
+      jsonResponse = await response.json();
+    } catch (e) {
+      //ignore this error now
+    }
+    if (response.ok) {
+      return jsonResponse as T;
+    } else {
+      throw new APIError(jsonResponse as ErrorResponse, response);
+    }
   }
 
   static getCommonHeaders(

@@ -19,6 +19,16 @@
             public const string delete = name + DELETE;
         }
 
+        public static class Orders
+        {
+            public const string name = "orders";
+
+            public const string create = name + CREATE;
+            public const string view = name + VIEW;
+            public const string update = name + UPDATE;
+            public const string delete = name + DELETE;
+        }
+
         public static class Users
         {
             public const string name = "users";

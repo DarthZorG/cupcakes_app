@@ -101,7 +101,11 @@ namespace cupcake_api.Controllers
             [FromBody] RefreshTokenRequest token
         )
         {
-            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
+            User? appUser = AuthorizedController.GetLoggedUser(_context, User);
+            if (appUser == null)
+            {
+                return Unauthorized();
+            }
             //check user
             var sig = Signature.fromBase64(token.refresh_token);
             if (Ecdsa.verify(appUser.Id, sig, _publicKey))
@@ -130,7 +134,7 @@ namespace cupcake_api.Controllers
             var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(appUser);
 
             claims.Add(new Claim(JwtRegisteredClaimNames.NameId, appUser.Id));
-            claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, appUser.UserName));
+            claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, appUser.UserName ?? ""));
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             foreach (Claim userClaim in claimsPrincipal.Claims)

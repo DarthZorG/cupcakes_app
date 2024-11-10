@@ -7,6 +7,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,26 +26,51 @@ import {AdminStackParamList} from '../../navigation/AdminStackNavigator';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import AdminOrderCard from '../../components/AdminOrderCard';
 import PageHeader from '../../components/PageHeader';
+import OrderService from '../../services/OrderService';
+import {useQuery} from '@tanstack/react-query';
+import OrderCard from '../../components/OrderCard';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Orders'>;
 
 function OrdersScreen(props: PropsType): JSX.Element {
+  const {
+    data: orders,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['orders-admin'],
+    queryFn: async () => {
+      return await OrderService.getOrders(
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="Todos os pedidos" />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollview}>
-        <View style={styles.innerContainer}>
-          <AdminOrderCard
-            showDetails={true}
-            onEdit={() => {
-              props.navigation.navigate('EditOrder');
-            }}
-          />
-          <AdminOrderCard />
-        </View>
-      </ScrollView>
+      <FlatList
+        style={styles.scrollview}
+        data={orders}
+        renderItem={({item}) => {
+          return (
+            <OrderCard
+              order={item}
+              isAdmin={true}
+              onEdit={() => {
+                props.navigation.navigate('EditOrder', {order: item});
+              }}
+            />
+          );
+        }}
+        refreshing={isLoading}
+        onRefresh={() => {
+          refetch();
+        }}
+      />
     </SafeAreaView>
   );
 }

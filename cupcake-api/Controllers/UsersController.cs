@@ -34,11 +34,7 @@ namespace cupcake_api.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<PublicUser>> GetCurrentUser()
         {
-            //            User appUser = _context.Users.Single(r => r.UserName == User.Identity!.Name);
-
-            var user = await _context.Users
-                .Where(r => r.UserName == User.Identity!.Name)
-                .FirstOrDefaultAsync();
+            var user = AuthorizedController.GetLoggedUser(_context, User);
 
             if (user == null)
             {
@@ -60,16 +56,14 @@ namespace cupcake_api.Controllers
         [Authorize("View User")]
         public async Task<ActionResult<PublicUser>> GetUser(string id)
         {
-            var user = await _context.Users
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
+            var user = await _context.Users.Where(e => e.Id == id).FirstOrDefaultAsync();
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return (PublicUser) user;
+            return (PublicUser)user;
         }
 
         // PUT: api/Products/5
@@ -89,7 +83,7 @@ namespace cupcake_api.Controllers
             dbUser.PhoneNumber = user.PhoneNumber;
             dbUser.AvatarId = user.AvatarId;
             _context.SaveChanges();
-            
+
             return NoContent();
         }
 

@@ -12,7 +12,7 @@ namespace cupcake_api.Models
         public long Id { get; internal set; }
 
         [MaxLength(100)]
-        public string? UserId { get; set; }
+        public string UserId { get; set; }
 
         [SwaggerReadOnly]
         [ForeignKey(nameof(UserId))]
@@ -20,7 +20,7 @@ namespace cupcake_api.Models
 
         public List<OrderItem> Items { get; set; }
 
-        public long? DeliveryMethodId { get; set; }
+        public long DeliveryMethodId { get; set; }
 
         [SwaggerReadOnly]
         [ForeignKey(nameof(DeliveryMethodId))]
@@ -28,9 +28,10 @@ namespace cupcake_api.Models
 
         public string Status { get; set; } = "Created";
 
+        [SwaggerReadOnly]
         public double TotalPrice { get; set; }
 
-        public long? PaymentMethodId { get; set; }
+        public long PaymentMethodId { get; set; }
 
         [SwaggerReadOnly]
         [ForeignKey(nameof(PaymentMethodId))]
@@ -50,7 +51,7 @@ namespace cupcake_api.Models
 
         [MaxLength(20)]
         public string? CardNumber { get; set; }
-
+      
         [MaxLength(10)]
         public String? CardValidTill { get; set; }
 

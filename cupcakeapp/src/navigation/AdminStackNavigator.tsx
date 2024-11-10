@@ -12,13 +12,14 @@ import ProductsScreen from '../screens/AdminStack/ProductsScreen';
 import EditProductScreen from '../screens/AdminStack/EditProdcutScreen';
 import EditOrderScreen from '../screens/AdminStack/EditOrderScreen';
 import {Product} from '../models/Product';
+import {Order} from '../models/Order';
 
 export type AdminStackParamList = {
   AdminHome: undefined;
   Orders: undefined;
   Products: undefined;
   EditProduct: {item: Product};
-  EditOrder: undefined;
+  EditOrder: {order: Order};
 };
 
 const AdminStack = createNativeStackNavigator<AdminStackParamList>();

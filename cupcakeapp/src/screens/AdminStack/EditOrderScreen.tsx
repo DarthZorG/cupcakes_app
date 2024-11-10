@@ -28,51 +28,56 @@ import FormRadio from '../../components/FormRadio';
 import FormField from '../../components/FormField';
 import CartItemCard from '../../components/CartItemCard';
 import PageHeader from '../../components/PageHeader';
+import PaymentMethodService from '../../services/PaymentMethodService';
+import {useQuery} from '@tanstack/react-query';
+import DeliveryMethodService from '../../services/DeliveryMethodService';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditOrder'>;
 
 function EditOrderScreen(props: PropsType): JSX.Element {
-  const deliveryMethods = useMemo(
-    () => [
-      {
-        id: '1', // acts as primary key, should be unique and non-empty string
-        label: 'Retirada na loja',
-        value: 'option1',
-      },
-      {
-        id: '2',
-        label: 'Entrega por motoboy',
-        value: 'option2',
-      },
-    ],
-    [],
-  );
+  const order = props.route.params?.order;
 
-  const paymentOptions = useMemo(
-    () => [
-      {
-        id: '1', // acts as primary key, should be unique and non-empty string
-        label: 'Cartão de credito (online)',
-        value: 'option1',
-      },
-      {
-        id: '2',
-        label: 'Pix',
-        value: 'option2',
-      },
-      {
-        id: '3',
-        label: 'Cartão de credito (na entrega)',
-        value: 'option3',
-      },
-      {
-        id: '4',
-        label: 'Em dinheiro na entrega',
-        value: 'option4',
-      },
-    ],
-    [],
-  );
+  const {data: paymentMethods, isLoading: isLoadingPayments} = useQuery({
+    queryKey: ['paymentMethods'],
+    queryFn: async () => {
+      return await PaymentMethodService.getPaymentMethods();
+    },
+  });
+
+  const {data: deliveryMethods, isLoading: isLoadingDelivery} = useQuery({
+    queryKey: ['deliveryMethods'],
+    queryFn: async () => {
+      return await DeliveryMethodService.getDeliveryMethods();
+    },
+  });
+
+  const deliveryOptions = useMemo(() => {
+    return (
+      deliveryMethods?.map(e => ({
+        id: e.id.toString(),
+        label:
+          e.name +
+          ' (R$ ' +
+          e.price.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) +
+          ')',
+        value: e.id.toString(),
+      })) ?? []
+    );
+  }, [deliveryMethods]);
+
+  const paymentOptions = useMemo(() => {
+    return (
+      paymentMethods?.map(e => ({
+        id: e.id.toString(),
+        label: e.name,
+        value: e.id.toString(),
+      })) ?? []
+    );
+  }, [paymentMethods]);
+
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="Editar pedido" />
@@ -80,7 +85,7 @@ function EditOrderScreen(props: PropsType): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollview}>
         <View style={styles.innerContainer}>
-          <FormRadio title={'Entrega:'} options={deliveryMethods} />
+          <FormRadio title={'Entrega:'} options={deliveryOptions} />
           <FormField title="CEP" value="80000-000" />
           <FormField title="Rua" value="Rua Antonio de Paula, 400 " />
           <FormField title="Complemento" value="" />
@@ -89,8 +94,16 @@ function EditOrderScreen(props: PropsType): JSX.Element {
 
           <FormRadio title={'Metodo de pagamento:'} options={paymentOptions} />
           <BoldText style={styles.itemsLabel}>Itens do pedido</BoldText>
-          <CartItemCard allowEdit={true} />
-          <CartItemCard allowEdit={true} />
+          {order?.items.map(e => {
+            return (
+              <CartItemCard
+                key={e.productId}
+                allowEdit={true}
+                product={e.product!}
+                quantity={e.quantity}
+              />
+            );
+          })}
         </View>
       </ScrollView>
       <View>

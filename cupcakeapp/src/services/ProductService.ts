@@ -12,17 +12,7 @@ export default class ProductService extends BaseService {
         ...this.getCommonHeaders(),
       },
     });
-    let jsonResponse: ProductListResponse | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as ProductListResponse;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<ProductListResponse>(response);
   }
 
   static async updateProduct(
@@ -39,17 +29,7 @@ export default class ProductService extends BaseService {
         body: JSON.stringify(product),
       },
     );
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
 
   static async addProduct(product: Product): Promise<Product> {
@@ -60,17 +40,7 @@ export default class ProductService extends BaseService {
       },
       body: JSON.stringify(product),
     });
-    let jsonResponse: Product | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as Product;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<Product>(response);
   }
 
   static async deleteProduct(productId: number): Promise<void> {
@@ -83,16 +53,6 @@ export default class ProductService extends BaseService {
         },
       },
     );
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
 }

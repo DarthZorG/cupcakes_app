@@ -32,6 +32,10 @@ namespace cupcake_api.Authorization
                 new Claim(ClaimTypes.Permission, ClaimPermissions.Users.create),
                 new Claim(ClaimTypes.Permission, ClaimPermissions.Users.update),
                 new Claim(ClaimTypes.Permission, ClaimPermissions.Users.delete),
+                new Claim(ClaimTypes.Permission, ClaimPermissions.Orders.view),
+                new Claim(ClaimTypes.Permission, ClaimPermissions.Orders.create),
+                new Claim(ClaimTypes.Permission, ClaimPermissions.Orders.update),
+                new Claim(ClaimTypes.Permission, ClaimPermissions.Orders.delete),
                 new Claim(ClaimTypes.Permission, ClaimPermissions.System.Settings.manage)
             );
             

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,18 +9,26 @@ import {
   Image,
   Text,
 } from 'react-native';
-import {BLACK, BLUE, GRAY, LIGHT_BLUE, WHITE} from '../config/colors';
+import {BLACK, BLUE, GRAY, LIGHT_BLUE, RED, WHITE} from '../config/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BoldText, DefaultText} from './StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import CartItemCard from './CartItemCard';
+import {Order} from '../models/Order';
 
 export type OrderCardProps = {
   showDetails?: boolean;
+  order: Order;
+  isAdmin?: boolean;
+  onEdit?: () => void;
 };
 
 const OrderCard = (props: OrderCardProps): JSX.Element => {
   const showDetails = props.showDetails ?? false;
+  const [expanded, setExpanded] = useState(showDetails);
+
+  const created =
+    props.order.createdAt != null ? new Date(props.order.createdAt) : null;
 
   return (
     <View style={[styles.cardContainer]}>
@@ -28,30 +36,73 @@ const OrderCard = (props: OrderCardProps): JSX.Element => {
         <View style={styles.dataContainer}>
           <View style={styles.textContainer}>
             <BoldText style={styles.productName}>
-              {'Pedido del: 29/05/2024'}
+              {'Pedido del: ' + (created?.toLocaleDateString() ?? '---')}
             </BoldText>
-            <DefaultText style={styles.flavor}>{'Valor: R$ 40,00'}</DefaultText>
             <DefaultText style={styles.flavor}>
-              {'Entrega: Retirar na loja'}
+              {'Valor: R$ ' +
+                props.order.totalPrice.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
             </DefaultText>
             <DefaultText style={styles.flavor}>
-              {'Status: Pedido entregue'}
+              {'Entrega: ' + (props.order.deliveryMethod?.name ?? '')}
+            </DefaultText>
+            <DefaultText style={styles.flavor}>
+              {'Status: ' + (props.order.status ?? '')}
             </DefaultText>
           </View>
         </View>
-        {!showDetails ? (
+        {!expanded ? (
           <View style={styles.priceContainer}>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                setExpanded(true);
+              }}>
               <BoldText style={styles.price}>{'Detalhes do pedido'}</BoldText>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.detailsContainer}>
-            <CartItemCard allowEdit={false} />
-            <CartItemCard allowEdit={false} />
+            {props.order.items.map(e => {
+              return (
+                <CartItemCard
+                  key={e.productId}
+                  product={e.product!}
+                  quantity={e.quantity}
+                  allowEdit={false}
+                />
+              );
+            })}
           </View>
         )}
       </View>
+      {props.isAdmin && (
+        <View style={styles.priceContainer}>
+          <TouchableOpacity onPress={props.onEdit}>
+            <View style={styles.buttonContainer}>
+              <Material
+                style={{alignItems: 'center', color: LIGHT_BLUE}}
+                name={'file-edit-outline'}
+                size={15}
+              />
+              <DefaultText style={styles.edit}>{'Edit'}</DefaultText>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {}}>
+            <View style={styles.buttonContainer}>
+              <Material
+                style={{alignItems: 'center', color: RED}}
+                name={'trash-can-outline'}
+                size={15}
+              />
+              <DefaultText style={styles.delete}>
+                {'Cancelar pedido'}
+              </DefaultText>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -139,4 +190,18 @@ const styles = StyleSheet.create({
   },
   productName: {},
   flavor: {},
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingLeft: 14,
+  },
+  delete: {
+    color: RED,
+    fontSize: 10,
+  },
+  edit: {
+    color: LIGHT_BLUE,
+    fontSize: 10,
+  },
 });

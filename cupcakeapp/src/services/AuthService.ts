@@ -23,17 +23,7 @@ export default class AuthService extends BaseService {
       },
       body: bodyFormData,
     });
-    let jsonResponse: LoginResponse | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as LoginResponse;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<LoginResponse>(response);
   }
 
   static async refreshToken(
@@ -50,14 +40,7 @@ export default class AuthService extends BaseService {
       body: JSON.stringify({refresh_token: refreshToken}),
     });
 
-    let jsonResponse: RefreshTokenResponse | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {}
-    if (response.ok) {
-      return jsonResponse as RefreshTokenResponse;
-    }
-    throw new APIError(jsonResponse as ErrorResponse, response);
+    return await this.handleResponse<RefreshTokenResponse>(response);
   }
 
   static async register(

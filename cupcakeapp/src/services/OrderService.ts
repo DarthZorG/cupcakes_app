@@ -3,10 +3,34 @@ import {ErrorResponse} from '../models/GenericAPIResponse';
 import {AuthorizationHeader, BaseService} from './BaseService';
 import {API_URL} from '../config';
 import {CardDetails} from '../models/CardDetails';
-import {Order} from '../models/Order';
+import {NewOrder, Order} from '../models/Order';
+import qs from 'qs';
 
 export default class OrderService extends BaseService {
-  static async addOrder(data: Order): Promise<Order> {
+  static async getOrders(
+    search?: string,
+    count?: number,
+    offset?: number,
+    adminMode?: boolean,
+  ): Promise<Order[]> {
+    const query = qs.stringify({
+      search,
+      count,
+      offset,
+      adminMode,
+    });
+    console.log(query);
+    const response = await fetch(API_URL + 'Orders?' + query, {
+      method: 'GET',
+      headers: {
+        ...this.getCommonHeaders(AuthorizationHeader.Required),
+      },
+    });
+
+    return await this.handleResponse<Order[]>(response);
+  }
+
+  static async addOrder(data: NewOrder): Promise<Order> {
     const response = await fetch(API_URL + 'Orders', {
       method: 'POST',
       headers: {
@@ -14,17 +38,7 @@ export default class OrderService extends BaseService {
       },
       body: JSON.stringify(data),
     });
-    let jsonResponse: Order | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as Order;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<Order>(response);
   }
 
   static getEmptyCardDetails(): CardDetails {

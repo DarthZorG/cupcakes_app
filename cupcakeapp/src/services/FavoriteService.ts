@@ -12,17 +12,7 @@ export default class FavoriteService extends BaseService {
         ...this.getCommonHeaders(AuthorizationHeader.Required),
       },
     });
-    let jsonResponse: ProductListResponse | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as ProductListResponse;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<ProductListResponse>(response);
   }
 
   static async addFavorite(productId: number): Promise<void> {
@@ -33,17 +23,7 @@ export default class FavoriteService extends BaseService {
       },
       body: JSON.stringify({productId}),
     });
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
 
   static async deleteFavorite(productId: number): Promise<void> {
@@ -56,16 +36,6 @@ export default class FavoriteService extends BaseService {
         },
       },
     );
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
 }

@@ -29,4 +29,17 @@ export interface Order {
   cardValidTill?: string;
   cardCVV?: string;
   items: OrderItem[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface NewOrder {
+  paymentMethodId: number;
+  deliveryMethodId: number;
+  items: OrderItem[];
+  addressId?: number;
+  cardHolderName?: string;
+  cardNumber?: string;
+  cardValidTill?: string;
+  cardCVV?: string;
 }

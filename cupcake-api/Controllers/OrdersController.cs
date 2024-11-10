@@ -7,25 +7,76 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cupcake_api.Database;
 using cupcake_api.Models;
+using cupcake_api.Requests;
+using Microsoft.AspNetCore.Authorization;
+using cupcake_api.Authorization;
 
 namespace cupcake_api.Controllers
 {
     [Route("api/v1/[controller]")]
+    [Authorize]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController : AuthorizedController
     {
-        private readonly DataContext _context;
-
         public OrdersController(DataContext context)
-        {
-            _context = context;
-        }
+            : base(context) { }
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrder(
+            [FromQuery] string? search,
+            [FromQuery] int? offset,
+            [FromQuery] int? count,
+            [FromQuery] bool adminMode
+        )
         {
-            return await _context.Order.ToListAsync();
+            
+
+            if (adminMode)
+            {
+                if (!User.HasClaim(ClaimTypes.Permission, ClaimPermissions.Orders.view))
+                {
+                    return Forbid();
+                }
+            }
+
+            if (count == null)
+            {
+                count = 100;
+            }
+            var orders = _context.Order
+                .Include(e => e.Items)
+                .ThenInclude(e => e.Product)
+                .ThenInclude(p => p.Image)
+                .Include(e => e.PaymentMethod)
+                .Include(e => e.DeliveryMethod)
+                .AsQueryable();
+            if (!adminMode)
+            {
+                orders = orders.Where(e => e.UserId == CurrentUser.Id);
+            }
+            if (search != null)
+            {
+                orders = orders.Where(
+                    e =>
+                        e.Items.Any(
+                            f =>
+                                f.Product != null
+                                && (
+                                    f.Product.Name.Contains(search)
+                                    || f.Product.Flavor.Contains(search)
+                                )
+                        )
+                );
+            }
+            orders = orders.OrderByDescending(e => e.Id);
+            if (offset != null)
+            {
+                orders = orders.Skip((int)offset);
+            }
+            orders = orders.Take((int)count);
+
+            return await orders.ToListAsync();
         }
 
         // GET: api/Orders/5
@@ -76,17 +127,17 @@ namespace cupcake_api.Controllers
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Order>> PostOrder(NewOrderRequest orderRequest)
         {
-            var user = await _context.Users
-                .Where(r => r.UserName == User.Identity!.Name)
-                .FirstOrDefaultAsync();
+          
+
+            Order order = new Order();
 
             if (order.UserId == null)
             {
-                order.UserId = user.Id;
+                order.UserId = CurrentUser.Id;
             }
-
+            /*
             //perfom data validation
             if (order.PaymentMethodId == null)
             {
@@ -101,18 +152,24 @@ namespace cupcake_api.Controllers
                     nameof(order.DeliveryMethodId),
                     "DeliveryMethodId is required when creating a new Order"
                 );
-            }
-            if (order.Items == null || order.Items.Count < 1)
+            } */
+            order.PaymentMethodId = orderRequest.PaymentMethodId;
+            order.DeliveryMethodId = orderRequest.DeliveryMethodId;
+            order.AddressId = orderRequest.AddressId;
+            order.CardNumber = orderRequest.CardNumber;
+            order.CardHolderName = orderRequest.CardHolderName;
+            order.CardCVV = orderRequest.CardCVV;
+            order.CardValidTill = orderRequest.CardValidTill;
+            order.Items = orderRequest.Items;
+
+            if (orderRequest.Items == null || orderRequest.Items.Count < 1)
             {
                 ModelState.AddModelError(
-                    nameof(order.Items),
+                    nameof(orderRequest.Items),
                     "You need to have at least one product when creating a new Order"
                 );
             }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+         
             PaymentMethod? paymentMethod = _context.PaymentMethod
                 .Where(e => e.Id == order.PaymentMethodId)
                 .FirstOrDefault();
@@ -123,7 +180,7 @@ namespace cupcake_api.Controllers
             if (paymentMethod == null)
             {
                 ModelState.AddModelError(
-                    nameof(order.PaymentMethodId),
+                    nameof(orderRequest.PaymentMethodId),
                     "Invalid PaymentMethodId specified"
                 );
             }
@@ -133,22 +190,22 @@ namespace cupcake_api.Controllers
                 {
                     if (order.CardHolderName == null)
                     {
-                        ModelState.AddModelError(nameof(order.CardHolderName), "Is required");
+                        ModelState.AddModelError(nameof(orderRequest.CardHolderName), "Is required");
                     }
 
                     if (order.CardNumber == null)
                     {
-                        ModelState.AddModelError(nameof(order.CardNumber), "Is required");
+                        ModelState.AddModelError(nameof(orderRequest.CardNumber), "Is required");
                     }
 
                     if (order.CardValidTill == null)
                     {
-                        ModelState.AddModelError(nameof(order.CardValidTill), "Is required");
+                        ModelState.AddModelError(nameof(orderRequest.CardValidTill), "Is required");
                     }
 
                     if (order.CardCVV == null)
                     {
-                        ModelState.AddModelError(nameof(order.CardCVV), "Is required");
+                        ModelState.AddModelError(nameof(orderRequest.CardCVV), "Is required");
                     }
                 }
             }
@@ -165,11 +222,27 @@ namespace cupcake_api.Controllers
                 {
                     if (order.AddressId == null)
                     {
-                        ModelState.AddModelError(nameof(order.AddressId), "Is required");
+                        ModelState.AddModelError(nameof(orderRequest.AddressId), "Is required");
                     }
                 }
             }
 
+            order.TotalPrice = deliveryMethod.Price;
+            foreach (var item in order.Items)
+            {
+                var p = _context.Product.Find(item.ProductId);
+                if (p == null)
+                {
+                    ModelState.AddModelError(nameof(orderRequest.Items), "Invalid product id specified: " + item.ProductId.ToString());
+                    break;
+                }
+                order.TotalPrice += p.Price * (double)item.Quantity;
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
             try

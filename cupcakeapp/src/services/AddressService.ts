@@ -12,17 +12,7 @@ export default class AddressService extends BaseService {
         ...this.getCommonHeaders(AuthorizationHeader.Required),
       },
     });
-    let jsonResponse: Address[] | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as Address[];
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<Address[]>(response);
   }
 
   static async updateAddress(addressId: number, data: Address): Promise<void> {
@@ -36,17 +26,7 @@ export default class AddressService extends BaseService {
         body: JSON.stringify(data),
       },
     );
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
 
   static async addAddress(data: Address): Promise<Address> {
@@ -57,17 +37,7 @@ export default class AddressService extends BaseService {
       },
       body: JSON.stringify(data),
     });
-    let jsonResponse: Address | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as Address;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<Address>(response);
   }
 
   static async deleteAddress(addressId: number): Promise<void> {
@@ -80,17 +50,7 @@ export default class AddressService extends BaseService {
         },
       },
     );
-    let jsonResponse: ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<void>(response);
   }
 
   static getEmptyAddress(): Address {

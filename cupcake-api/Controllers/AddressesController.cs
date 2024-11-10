@@ -12,22 +12,16 @@ namespace cupcake_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AddressesController : ControllerBase
+    public class AddressesController : AuthorizedController
     {
-        private readonly DataContext _context;
-
         public AddressesController(DataContext context)
-        {
-            _context = context;
-        }
+            : base(context) { }
 
         // GET: api/Addresses
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
-            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
-
-            return await _context.Address.Where(e => e.UserId == user.Id).ToListAsync();
+            return await _context.Address.Where(e => e.UserId == CurrentUser.Id).ToListAsync();
         }
 
         // GET: api/Addresses/5
@@ -49,7 +43,6 @@ namespace cupcake_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(long id, Address address)
         {
-            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
 
             if (id != address.Id)
             {
@@ -61,7 +54,7 @@ namespace cupcake_api.Controllers
             {
                 return NotFound();
             }
-            if (oriAddress.UserId != user.Id)
+            if (oriAddress.UserId != CurrentUser.Id)
             {
                 return Forbid();
             }
@@ -92,9 +85,8 @@ namespace cupcake_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
-
-            address.UserId = user.Id;
+       
+            address.UserId = CurrentUser.Id;
 
             _context.Address.Add(address);
             await _context.SaveChangesAsync();

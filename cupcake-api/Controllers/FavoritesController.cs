@@ -15,15 +15,11 @@ namespace cupcake_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize]
-    public class FavoritesController : ControllerBase
-    {
-        private readonly DataContext _context;
 
-        public FavoritesController(DataContext context)
-        {
-            _context = context;
-        }
+    public class FavoritesController : AuthorizedController
+    {
+
+        public FavoritesController(DataContext context) : base(context) { }
 
       
 
@@ -34,7 +30,7 @@ namespace cupcake_api.Controllers
             var user = await _context.Users
                 .Include(e => e.Favorites)
                 .ThenInclude(k => k.Image)
-                .Where(r => r.UserName == User.Identity!.Name)
+                .Where(r => r.Id == CurrentUser.Id)
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -53,7 +49,7 @@ namespace cupcake_api.Controllers
         {
             var user = await _context.Users
                .Include(e => e.Favorites)
-               .Where(r => r.UserName == User.Identity!.Name)
+               .Where(r => r.Id == CurrentUser.Id)
                .FirstOrDefaultAsync();
 
             if (user == null)
@@ -83,7 +79,7 @@ namespace cupcake_api.Controllers
         {
             var user = await _context.Users
                 .Include(e => e.Favorites)
-                .Where(r => r.UserName == User.Identity!.Name)
+                .Where(r => r.Id == CurrentUser.Id)
                 .FirstOrDefaultAsync();
 
             if (user == null)
