@@ -3,6 +3,7 @@ import {ErrorResponse} from '../models/GenericAPIResponse';
 import {AuthorizationHeader, BaseService} from './BaseService';
 import {API_URL} from '../config';
 import {IUser} from '../models/User';
+import {CreateUserRequest} from '../models/CreateUserRequest';
 
 export default class UserService extends BaseService {
   static async getCurrentUser(): Promise<IUser> {
@@ -48,28 +49,18 @@ export default class UserService extends BaseService {
       throw e;
     }
   }
-  /*
-  static async addAddress(data: Address): Promise<Address> {
-    const response = await fetch(API_URL + 'Addresses', {
+
+  static async addUser(data: CreateUserRequest): Promise<IUser> {
+    const response = await fetch(API_URL + 'Users', {
       method: 'POST',
       headers: {
         ...this.getCommonHeaders(AuthorizationHeader.Required),
       },
       body: JSON.stringify(data),
     });
-    let jsonResponse: Address | ErrorResponse | null = null;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      //ignore this error now
-    }
-    if (response.ok) {
-      return jsonResponse as Address;
-    } else {
-      throw new APIError(jsonResponse as ErrorResponse, response);
-    }
+    return await this.handleResponse<IUser>(response);
   }
-
+  /*
   static async deleteAddress(addressId: number): Promise<void> {
     const response = await fetch(
       API_URL + 'Addresses/' + encodeURIComponent(addressId),
