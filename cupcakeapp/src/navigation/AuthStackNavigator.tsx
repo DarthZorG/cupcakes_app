@@ -6,6 +6,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {NavigationProp} from '@react-navigation/native';
 import {baseHeaderStyle} from '../config/styles';
 import {Platform, TouchableOpacity, Image, View} from 'react-native';
+import RegisterScreen from '../screens/AuthStack/RegisterScreen';
 
 //allowed parameters for each stack screen
 export type AuthStackParamList = {
@@ -61,6 +62,7 @@ export const AuthStackNavigator = (): JSX.Element => {
           }
         }
       />
+      <AuthStack.Screen name={'Register'} component={RegisterScreen} />
     </AuthStack.Navigator>
   );
 };
