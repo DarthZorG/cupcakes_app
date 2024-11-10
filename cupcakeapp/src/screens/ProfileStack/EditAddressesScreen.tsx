@@ -4,7 +4,7 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -12,6 +12,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -19,7 +20,7 @@ import {
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
-import {LIGHT_BLUE, WHITE} from '../../config/colors';
+import {BLACK, LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
 import {BoldText} from '../../components/StyledTexts';
 import CustomButton from '../../components/CustomButton';
@@ -33,6 +34,7 @@ import {APIError} from '../../Errors/APIError';
 import {showAlert} from '../../store/actions/AlertActions';
 import ErrorHelper from '../../Errors/ErrorHelper';
 import AddressPanel from '../../components/AddressPanel';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type PropsType = NativeStackScreenProps<ProfileStackParamList, 'EditAddress'>;
 
@@ -42,6 +44,38 @@ function EditAddressScreen(props: PropsType): JSX.Element {
     ...AddressService.getEmptyAddress(),
     ...props.route.params?.address,
   });
+
+  const headerRight = useCallback(() => {
+    const onDelete = () => {
+      dispatch(
+        showAlert('Remover endereço', 'Quer remover o endereço selectionado?', [
+          {text: 'Não', onPress: () => {}, isCancelButton: true},
+          {
+            text: 'Sim',
+            onPress: async () => {
+              try {
+                await AddressService.deleteAddress(
+                  props.route.params?.address?.id ?? -1,
+                );
+                props.navigation.navigate('MyAddresses');
+              } catch {}
+            },
+          },
+        ]),
+      );
+    };
+    return (
+      <TouchableOpacity testID="navigate_add_address" onPress={onDelete}>
+        <Material style={{color: BLACK}} name={'trash-can-outline'} size={20} />
+      </TouchableOpacity>
+    );
+  }, []);
+
+  React.useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight,
+    });
+  }, [props.navigation]);
 
   const onSaveAddress = async () => {
     dispatch(startLoading());

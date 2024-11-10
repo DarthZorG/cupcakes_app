@@ -30,5 +30,10 @@ namespace cupcake_api.Models
         [JsonIgnore]
         [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
+
+        //let's implement address soft deletion
+        [JsonIgnore]
+        public DateTime? DeletedAt { get; set; } 
+
     }
 }

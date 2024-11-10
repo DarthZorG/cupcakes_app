@@ -21,7 +21,9 @@ namespace cupcake_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
-            return await _context.Address.Where(e => e.UserId == CurrentUser.Id).ToListAsync();
+            return await _context.Address
+                .Where(e => e.UserId == CurrentUser.Id && e.DeletedAt == null)
+                .ToListAsync();
         }
 
         // GET: api/Addresses/5
@@ -43,7 +45,6 @@ namespace cupcake_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(long id, Address address)
         {
-
             if (id != address.Id)
             {
                 return BadRequest();
@@ -85,7 +86,6 @@ namespace cupcake_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-       
             address.UserId = CurrentUser.Id;
 
             _context.Address.Add(address);
@@ -98,7 +98,7 @@ namespace cupcake_api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAddress(long id)
         {
-            var user = await _context.Users.Include(e => e.Favorites).FirstOrDefaultAsync();
+            var user = CurrentUser;
 
             var oriAddress = await _context.Address.FindAsync(id);
             if (oriAddress == null)
@@ -117,8 +117,17 @@ namespace cupcake_api.Controllers
             }
 
             _context.Address.Remove(address);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                _context.Entry(address).State = EntityState.Modified;
+                address.DeletedAt = DateTime.UtcNow;
+                _context.SaveChanges();
+                //if deletion fails, the address is used in some orders, so we will just disable it
+            }
             return NoContent();
         }
 
