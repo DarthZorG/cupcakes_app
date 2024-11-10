@@ -28,6 +28,26 @@ export default class UserService extends BaseService {
     );
     return await this.handleResponse<void>(response);
   }
+
+  static async isAdmin(): Promise<boolean> {
+    const response = await fetch(API_URL + 'Users/isAdmin', {
+      method: 'GET',
+      headers: {
+        ...this.getCommonHeaders(AuthorizationHeader.Required),
+      },
+    });
+    try {
+      await this.handleResponse<void>(response);
+      return true;
+    } catch (e: any) {
+      if (e instanceof APIError) {
+        if (e.requestResponse.status === 403) {
+          return false;
+        }
+      }
+      throw e;
+    }
+  }
   /*
   static async addAddress(data: Address): Promise<Address> {
     const response = await fetch(API_URL + 'Addresses', {

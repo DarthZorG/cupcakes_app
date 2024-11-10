@@ -39,6 +39,9 @@ const BottomTabNavigator = (): JSX.Element => {
   const isAuthenticated = useSelector((state: StoreState): boolean => {
     return true; //state.auth.token != null;
   });
+  const isAdmin = useSelector((state: StoreState): boolean => {
+    return state.auth.isAdmin ?? false;
+  });
   return (
     <BottomTab.Navigator
       screenOptions={({route}) => ({
@@ -80,20 +83,22 @@ const BottomTabNavigator = (): JSX.Element => {
         }}
       />
 
-      <BottomTab.Screen
-        name="AdminStack"
-        component={AdminStackNavigator}
-        options={{
-          tabBarLabel: 'ADMIN',
-          tabBarIcon: ({focused}) => (
-            <Material
-              name={focused ? 'cog' : 'cog-outline'}
-              color={focused ? BLACK : GRAY}
-              size={24}
-            />
-          ),
-        }}
-      />
+      {isAdmin && (
+        <BottomTab.Screen
+          name="AdminStack"
+          component={AdminStackNavigator}
+          options={{
+            tabBarLabel: 'ADMIN',
+            tabBarIcon: ({focused}) => (
+              <Material
+                name={focused ? 'cog' : 'cog-outline'}
+                color={focused ? BLACK : GRAY}
+                size={24}
+              />
+            ),
+          }}
+        />
+      )}
 
       <BottomTab.Screen
         name="ProfileStack"

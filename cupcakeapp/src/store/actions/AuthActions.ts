@@ -12,13 +12,13 @@ export const RETRIEVE_TOKEN: string = 'RETRIEVE_TOKEN';
 export const LOGIN: string = 'LOGIN';
 export const LOGOUT: string = 'LOGOUT';
 export const REGISTER: string = 'REGISTER';
+export const SET_ADMIN: string = 'SET_ADMIN';
 
 export interface AuthAction extends Action<string> {
   userId?: string;
   token?: string | null;
   token_expiration?: string;
-  biometryAvailable?: boolean;
-  biometryEnabled?: boolean;
+  isAdmin?: boolean;
 }
 
 function getExpiration(expiresIn: number): Date {
@@ -130,3 +130,8 @@ export const updateAuthToken = (
     });
   };
 };
+
+export const setAdmin = (isAdmin: boolean): AuthAction => ({
+  type: SET_ADMIN,
+  isAdmin,
+});

@@ -28,10 +28,15 @@ import {StoreState} from './src/store/reducers';
 import {AlertInfo} from './src/store/reducers/AlertReducer';
 import {LoadingOverlay} from './src/components/LoadingOverlay';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {LOGOUT, updateAuthToken} from './src/store/actions/AuthActions';
+import {
+  LOGOUT,
+  setAdmin,
+  updateAuthToken,
+} from './src/store/actions/AuthActions';
 import AuthService from './src/services/AuthService';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {loadFavorites} from './src/store/actions/FavoriteActions';
+import UserService from './src/services/UsersService';
 
 const queryClient = new QueryClient();
 
@@ -131,9 +136,20 @@ function MainApp(): React.JSX.Element {
     });
   }, []);
 
+  const checkAdminLevel = async () => {
+    let isAdmin = false;
+    try {
+      isAdmin = await UserService.isAdmin();
+    } catch {}
+    dispatch(setAdmin(isAdmin));
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
+      checkAdminLevel();
       dispatch(loadFavorites());
+    } else {
+      dispatch(setAdmin(false));
     }
   }, [isAuthenticated]);
 

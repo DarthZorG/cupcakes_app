@@ -55,6 +55,7 @@ export const removeFavorite = (
   };
 };
 
+
 export const loadFavorites = (): ThunkAction<
   Promise<void>,
   StoreState,
