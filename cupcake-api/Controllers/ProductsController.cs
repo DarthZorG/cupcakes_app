@@ -23,9 +23,38 @@ namespace cupcake_api.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProduct(
+            [FromQuery] string? search,
+            [FromQuery] int? offset,
+            [FromQuery] int? count,
+            [FromQuery] bool adminMode
+        )
         {
-            return await _context.Product.Include(e => e.Image).ToListAsync();
+            var productQ = _context.Product.Include(e => e.Image).AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                productQ = productQ.Where(e => e.Name.Contains(search));
+            }
+
+            if (count == null)
+            {
+                count = 100;
+            }
+
+            if (!adminMode)
+            {
+                productQ = productQ.Where(e => e.Enabled);
+            }
+
+            productQ = productQ.OrderByDescending(e => e.Id);
+            if (offset != null)
+            {
+                productQ = productQ.Skip((int)offset);
+            }
+            productQ = productQ.Take((int)count);
+
+            return await productQ.ToListAsync();
         }
 
         // GET: api/Products/5
@@ -93,9 +122,10 @@ namespace cupcake_api.Controllers
             {
                 return NotFound();
             }
-
-            _context.Product.Remove(product);
+            product.Enabled = false;
             await _context.SaveChangesAsync();
+//            _context.Product.Remove(product);
+//            await _context.SaveChangesAsync();
 
             return NoContent();
         }

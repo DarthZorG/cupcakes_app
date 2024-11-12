@@ -48,20 +48,24 @@ function EditAddressScreen(props: PropsType): JSX.Element {
   const headerRight = useCallback(() => {
     const onDelete = () => {
       dispatch(
-        showAlert('Remover endereço', 'Quer remover o endereço selectionado?', [
-          {text: 'Não', onPress: () => {}, isCancelButton: true},
-          {
-            text: 'Sim',
-            onPress: async () => {
-              try {
-                await AddressService.deleteAddress(
-                  props.route.params?.address?.id ?? -1,
-                );
-                props.navigation.navigate('MyAddresses');
-              } catch {}
+        showAlert(
+          'Remover endereço',
+          'Deseja realmente remover o endereço selectionado?',
+          [
+            {text: 'Não', onPress: () => {}, isCancelButton: true},
+            {
+              text: 'Sim',
+              onPress: async () => {
+                try {
+                  await AddressService.deleteAddress(
+                    props.route.params?.address?.id ?? -1,
+                  );
+                  props.navigation.navigate('MyAddresses');
+                } catch {}
+              },
             },
-          },
-        ]),
+          ],
+        ),
       );
     };
     return (

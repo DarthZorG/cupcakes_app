@@ -2,6 +2,7 @@ import {Product} from '../../models/Product';
 import {
   ADD_CART_ITEM,
   CartAction,
+  EMPTY_CART,
   getCartKey,
   UPDATE_CART_ITEM,
 } from '../actions/CartActions';
@@ -74,6 +75,11 @@ export const CartReducer = (
         };
       }
       break;
+    case EMPTY_CART:
+      return {
+        ...previousState,
+        items: {},
+      };
     case UPDATE_CART_ITEM:
       if (action.product != null && action.quantity != null) {
         return {

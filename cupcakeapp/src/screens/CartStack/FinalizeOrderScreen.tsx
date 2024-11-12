@@ -46,6 +46,8 @@ import {NewOrder, Order, OrderItem} from '../../models/Order';
 import {StoreState} from '../../store/reducers';
 import {CartCollection, CartItem} from '../../store/reducers/CartReducer';
 import ErrorHelper from '../../Errors/ErrorHelper';
+import {showAlert} from '../../store/actions/AlertActions';
+import {emptyCart} from '../../store/actions/CartActions';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'EditOrder'>;
 
@@ -172,6 +174,35 @@ function FinalizeOrderScreen(props: PropsType): JSX.Element {
       }
       await OrderService.addOrder(newOrder);
       dispatch(stopLoading());
+      dispatch(emptyCart());
+      dispatch(
+        showAlert(
+          'Pedido criado!',
+          'Você pode visualizar o estado do pedido na pagina profilo -> meus pedidos',
+          [
+            {
+              text: 'Ok',
+              onPress: () => {
+                props.navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'HomeStack',
+                      state: {
+                        routes: [
+                          {
+                            name: 'Home',
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                });
+              },
+            },
+          ],
+        ),
+      );
     } catch (e: any) {
       console.log(e);
       ErrorHelper.handleError(e, dispatch);

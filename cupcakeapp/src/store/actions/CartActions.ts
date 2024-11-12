@@ -3,6 +3,7 @@ import {Product} from '../../models/Product';
 
 export const ADD_CART_ITEM: string = 'ADD_CART_ITEM';
 export const UPDATE_CART_ITEM: string = 'UPDATE_CART_ITEM';
+export const EMPTY_CART: string = 'EMPTY_CART';
 
 export interface CartAction extends Action<string> {
   product?: Product;
@@ -26,4 +27,8 @@ export const updateCartItem = (
 
 export const removeCartProduct = (product: Product): CartAction => {
   return updateCartItem(product, 0);
+};
+
+export const emptyCart = (): CartAction => {
+  return {type: EMPTY_CART};
 };
