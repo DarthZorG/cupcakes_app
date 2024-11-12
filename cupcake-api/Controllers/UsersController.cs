@@ -103,11 +103,6 @@ namespace cupcake_api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PublicUser>> CreateUser(CreateUserRequest data)
         {
-            var current = await _userManager.GetUserAsync(User);
-            if (current == null)
-            {
-                return Unauthorized();
-            }
             var user = new User
             {
                 UserName = data.Email,

@@ -40,6 +40,10 @@ import {
   resetFavorites,
 } from './src/store/actions/FavoriteActions';
 import UserService from './src/services/UsersService';
+import {BoldText, DefaultText} from './src/components/StyledTexts';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import {BLACK, LIGHT_BLUE, WHITE} from './src/config/colors';
+import Toast from 'react-native-toast-message';
 
 const queryClient = new QueryClient();
 
@@ -168,11 +172,29 @@ function MainApp(): React.JSX.Element {
   );
 }
 
+const toastConfig = {
+  cartToast: (props: any) => (
+    <View style={styles.toastMainContainer}>
+      <View style={styles.toastContainer}>
+        <View style={[styles.toastBar, props.toastBarStyle]} />
+        <View style={styles.toastInnerContainer}>
+          <Material style={styles.toastIcon} name={'cart-outline'} />
+          <View style={styles.toastMessageContainer}>
+            <BoldText style={styles.toastHeader}>{props.text1}</BoldText>
+            <DefaultText style={styles.toastMessage}>{props.text2}</DefaultText>
+          </View>
+        </View>
+      </View>
+    </View>
+  ),
+};
+
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <MainApp />
+        <Toast config={toastConfig} />
       </QueryClientProvider>
     </Provider>
   );
@@ -195,6 +217,45 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  toastMainContainer: {
+    width: '80%',
+    alignSelf: 'center',
+    flexDirection: 'column',
+    elevation: 5,
+    shadowColor: '#000000',
+    shadowOffset: {width: 4, height: 4},
+    shadowRadius: 2,
+    borderRadius: 15,
+    shadowOpacity: 0.1,
+  },
+  toastBar: {height: '100%', width: 5, backgroundColor: LIGHT_BLUE},
+  toastContainer: {
+    width: '100%',
+    backgroundColor: WHITE,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
+  toastInnerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 15,
+  },
+  toastIcon: {fontSize: 24, color: BLACK},
+  toastMessageContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginLeft: 5,
+  },
+  toastMessage: {},
+  toastHeader: {marginBottom: 3},
 });
 
 export default App;

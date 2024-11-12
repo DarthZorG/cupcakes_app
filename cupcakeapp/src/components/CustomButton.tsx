@@ -31,7 +31,10 @@ const CustomButton = (props: CustomButtonProps): JSX.Element => {
       <View
         style={[styles.buttonStyle, disabledStyle, props.style]}
         testID={props.testID}>
-        <BoldText style={styles.textStyle}>{props.title}</BoldText>
+        <BoldText
+          style={[styles.textStyle, styles.disabledTextStyle, props.textStyle]}>
+          {props.title}
+        </BoldText>
       </View>
     );
   }
@@ -81,7 +84,12 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 16,
   },
+  disabledTextStyle: {
+    color: GRAY,
+    textTransform: 'uppercase',
+    fontSize: 16,
+  },
   disabledStyle: {
-    backgroundColor: GRAY,
+    backgroundColor: WHITE,
   },
 });

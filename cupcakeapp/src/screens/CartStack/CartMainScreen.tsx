@@ -13,6 +13,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -21,7 +22,7 @@ import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {CartStackParamList} from '../../navigation/CartStackNAvigator';
 import CartItemCard from '../../components/CartItemCard';
-import {GRAY, WHITE} from '../../config/colors';
+import {BLUE, GRAY, WHITE} from '../../config/colors';
 import CustomButton from '../../components/CustomButton';
 import {BoldText, DefaultText} from '../../components/StyledTexts';
 import {useDispatch, useSelector} from 'react-redux';
@@ -30,6 +31,8 @@ import {FavoriteCollection} from '../../store/reducers/FavoritesReducer';
 import {CartCollection, CartItem} from '../../store/reducers/CartReducer';
 import {updateCartItem} from '../../store/actions/CartActions';
 import {toLinearSpace} from 'react-native-reanimated/lib/typescript/Colors';
+import {Product} from '../../models/Product';
+import {showAlert} from '../../store/actions/AlertActions';
 
 type PropsType = NativeStackScreenProps<CartStackParamList, 'CartHome'>;
 
@@ -58,32 +61,72 @@ function CartMainScreen(props: PropsType): JSX.Element {
     return totals;
   }, [cartItems]);
 
+  const goToHome = () => {
+    props.navigation.navigate('HomeStack', {
+      screen: 'Home',
+    });
+  };
+
+  const askRemove = (product: Product) => {
+    dispatch(
+      showAlert(
+        'Remover',
+        'Quer remover o iten "' + product.name + '" do carrinho?',
+        [
+          {
+            text: 'Não',
+            onPress: () => {},
+          },
+          {
+            text: 'Sim',
+            onPress: () => {
+              dispatch(updateCartItem(product, 0));
+            },
+          },
+        ],
+      ),
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        style={styles.scrollview}
-        data={items}
-        renderItem={({item}) => {
-          return (
-            <CartItemCard
-              product={item.product}
-              quantity={item.quantity}
-              allowEdit={true}
-              onDecreaseQuantity={() => {
-                if (item.quantity > 1) {
-                  dispatch(updateCartItem(item.product, item.quantity - 1));
-                }
-              }}
-              onIncreaseQuantity={() => {
-                dispatch(updateCartItem(item.product, item.quantity + 1));
-              }}
-              onRemoveItem={() => {
-                dispatch(updateCartItem(item.product, 0));
-              }}
-            />
-          );
-        }}
-      />
+      {items.length < 1 ? (
+        <View style={styles.emptyCartMessageContainer}>
+          <BoldText style={styles.emptyCartMessage}>
+            Il tuo carrinho está vazio!
+          </BoldText>
+          <TouchableOpacity onPress={goToHome}>
+            <DefaultText style={styles.goHomeMessage}>
+              Ir as compras
+            </DefaultText>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <FlatList
+          style={styles.scrollview}
+          data={items}
+          renderItem={({item}) => {
+            return (
+              <CartItemCard
+                product={item.product}
+                quantity={item.quantity}
+                allowEdit={true}
+                onDecreaseQuantity={() => {
+                  if (item.quantity > 1) {
+                    dispatch(updateCartItem(item.product, item.quantity - 1));
+                  }
+                }}
+                onIncreaseQuantity={() => {
+                  dispatch(updateCartItem(item.product, item.quantity + 1));
+                }}
+                onRemoveItem={() => {
+                  askRemove(item.product);
+                }}
+              />
+            );
+          }}
+        />
+      )}
       <View style={styles.bottomResume}>
         <View style={styles.resumeContainer}>
           <View style={styles.resumeLine}>
@@ -108,6 +151,7 @@ function CartMainScreen(props: PropsType): JSX.Element {
           onPress={() => {
             props.navigation.navigate('FinalizeOrder');
           }}
+          enabled={items.length > 0}
         />
       </View>
     </SafeAreaView>
@@ -122,6 +166,21 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     backgroundColor: WHITE,
+  },
+  emptyCartMessageContainer: {
+    flex: 1,
+    backgroundColor: WHITE,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyCartMessage: {
+    fontSize: 22,
+  },
+  goHomeMessage: {
+    fontSize: 22,
+    color: BLUE,
+    marginTop: 10,
   },
   innerContainer: {
     backgroundColor: WHITE,

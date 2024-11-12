@@ -31,6 +31,8 @@ import {startLoading, stopLoading} from '../../store/actions/LoaderActions';
 import {Product} from '../../models/Product';
 import {StoreState} from '../../store/reducers';
 import {FavoriteCollection} from '../../store/reducers/FavoritesReducer';
+import Toast from 'react-native-toast-message';
+
 import {
   addFavorite,
   getFavoriteKey,
@@ -76,6 +78,15 @@ function HomeScreen(props: PropsType): JSX.Element {
               }}
               onAddToCart={() => {
                 dispatch(addItemToCart(item));
+                Toast.show({
+                  type: 'cartToast',
+                  text1: item.name,
+                  text2: 'foi adicionado ao carrinho!',
+                  autoHide: true,
+                  onPress: () => {
+                    Toast.hide();
+                  },
+                });
               }}
             />
           );
