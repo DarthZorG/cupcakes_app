@@ -42,6 +42,15 @@ namespace cupcake_api
                 .AddEntityFrameworkStores<Database.DataContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            });
+
             var httpContextAccessor = new HttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor>(httpContextAccessor);
 

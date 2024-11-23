@@ -17,8 +17,7 @@ namespace cupcake_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize]
-    public class UsersController : ControllerBase
+     public class UsersController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
@@ -79,6 +78,7 @@ namespace cupcake_api.Controllers
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(string id, PublicUser user)
         {
             var dbUser = await _context.Users.Where(e => e.Id == id).FirstOrDefaultAsync();

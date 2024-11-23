@@ -21,6 +21,7 @@ export type FormFieldProps = {
   onChange: (text: string) => void;
   keyboardType?: KeyboardTypeOptions;
   inputMode?: InputModeOptions;
+  isPassword?: boolean;
 };
 
 const FormField = (props: FormFieldProps): JSX.Element => {
@@ -30,6 +31,8 @@ const FormField = (props: FormFieldProps): JSX.Element => {
       <TextInput
         style={styles.input}
         value={props.value}
+        secureTextEntry={props.isPassword === true}
+        autoCapitalize={props.isPassword === true ? 'none' : undefined}
         keyboardType={props.keyboardType}
         inputMode={props.inputMode}
         onChangeText={text => {

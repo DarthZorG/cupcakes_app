@@ -90,6 +90,7 @@ function RegisterScreen(props: PropsType): JSX.Element {
           />
           <FormField
             title="Password"
+            isPassword={true}
             value={data.password}
             onChange={value => {
               setData({...data, password: value});
@@ -97,6 +98,7 @@ function RegisterScreen(props: PropsType): JSX.Element {
           />
           <FormField
             title="Conferma Password"
+            isPassword={true}
             value={passwordConfirm}
             onChange={value => {
               setPasswordConfirm(value);

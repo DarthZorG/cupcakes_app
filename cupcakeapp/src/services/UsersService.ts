@@ -54,7 +54,7 @@ export default class UserService extends BaseService {
     const response = await fetch(API_URL + 'Users', {
       method: 'POST',
       headers: {
-        ...this.getCommonHeaders(AuthorizationHeader.Required),
+        ...this.getCommonHeaders(AuthorizationHeader.None),
       },
       body: JSON.stringify(data),
     });

@@ -74,6 +74,7 @@ function LoginScreen(props: PropsType): JSX.Element {
         <FormField
           title="Password"
           value={password}
+          isPassword={true}
           onChange={text => setPassword(text)}
         />
         <CustomButton
