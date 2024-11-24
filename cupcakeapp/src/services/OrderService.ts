@@ -50,7 +50,7 @@ export default class OrderService extends BaseService {
     } as CardDetails;
   }
 
-  static getStatusString(status?: string): string | null {
+  static getStatusString(status?: string): string {
     switch (status) {
       case 'CREATED':
         return 'criado';

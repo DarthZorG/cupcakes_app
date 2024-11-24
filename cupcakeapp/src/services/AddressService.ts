@@ -81,4 +81,76 @@ export default class AddressService extends BaseService {
     }
     return true;
   }
+
+  static async getAddressesForUser(userId: string): Promise<Address[]> {
+    const response = await fetch(
+      API_URL + 'Addresses/user/' + encodeURIComponent(userId),
+      {
+        method: 'GET',
+        headers: {
+          ...this.getCommonHeaders(AuthorizationHeader.Required),
+        },
+      },
+    );
+    return await this.handleResponse<Address[]>(response);
+  }
+
+  static async updateAddressForUser(
+    userId: string,
+    addressId: number,
+    data: Address,
+  ): Promise<void> {
+    const response = await fetch(
+      API_URL +
+        'Addresses/user/' +
+        encodeURIComponent(userId) +
+        ' /' +
+        encodeURIComponent(addressId),
+      {
+        method: 'PUT',
+        headers: {
+          ...this.getCommonHeaders(AuthorizationHeader.Required),
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    return await this.handleResponse<void>(response);
+  }
+
+  static async addAddressForUser(
+    userId: string,
+    data: Address,
+  ): Promise<Address> {
+    const response = await fetch(
+      API_URL + 'Addresses/user/' + encodeURIComponent(userId),
+      {
+        method: 'POST',
+        headers: {
+          ...this.getCommonHeaders(AuthorizationHeader.Required),
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    return await this.handleResponse<Address>(response);
+  }
+
+  static async deleteAddressForUser(
+    userId: string,
+    addressId: number,
+  ): Promise<void> {
+    const response = await fetch(
+      API_URL +
+        'Addresses/user/' +
+        encodeURIComponent(userId) +
+        '/' +
+        encodeURIComponent(addressId),
+      {
+        method: 'DELETE',
+        headers: {
+          ...this.getCommonHeaders(AuthorizationHeader.Required),
+        },
+      },
+    );
+    return await this.handleResponse<void>(response);
+  }
 }

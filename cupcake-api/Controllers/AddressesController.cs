@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cupcake_api.Database;
 using cupcake_api.Models;
+using cupcake_api.Authorization;
+using static cupcake_api.Authorization.ClaimPermissions;
 
 namespace cupcake_api.Controllers
 {
@@ -17,34 +19,72 @@ namespace cupcake_api.Controllers
         public AddressesController(DataContext context)
             : base(context) { }
 
+        protected Boolean VerifyUser(ref string? userId)
+        {
+            if (userId == null)
+            {
+                userId = CurrentUser.Id;
+            }
+            if (userId != CurrentUser.Id)
+            {
+                //check permission
+                if (!User.HasClaim(ClaimTypes.Permission, ClaimPermissions.Users.view))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<IEnumerable<Address>>> GetAddress(string? userId)
         {
+            if (!VerifyUser(ref userId))
+            {
+                return Forbid();
+            }
             return await _context.Address
-                .Where(e => e.UserId == CurrentUser.Id && e.DeletedAt == null)
+                .Where(e => e.UserId == userId && e.DeletedAt == null)
                 .ToListAsync();
         }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Address>> GetAddress(long id)
+        [HttpGet("user/{userId}/id")]
+        public async Task<ActionResult<Address>> GetAddress(string? userId, long id)
         {
+
+            if (!VerifyUser(ref userId))
+            {
+                return Forbid();
+            }
             var address = await _context.Address.FindAsync(id);
 
             if (address == null)
             {
                 return NotFound();
             }
-
+            if (address.UserId != userId)
+            {
+                return Forbid();
+            }
             return address;
         }
 
         // PUT: api/Addresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(long id, Address address)
+        [HttpPut("user/{userId}/id")]
+        public async Task<IActionResult> PutAddress(string? userId, long id, Address address)
         {
+
+            if (!VerifyUser(ref userId))
+            {
+                return Forbid();
+            }
+
             if (id != address.Id)
             {
                 return BadRequest();
@@ -55,7 +95,7 @@ namespace cupcake_api.Controllers
             {
                 return NotFound();
             }
-            if (oriAddress.UserId != CurrentUser.Id)
+            if (oriAddress.UserId != userId)
             {
                 return Forbid();
             }
@@ -84,8 +124,14 @@ namespace cupcake_api.Controllers
         // POST: api/Addresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Address>> PostAddress(Address address)
+        [HttpPost("user/{userId}")]
+        public async Task<ActionResult<Address>> PostAddress(string? userId, Address address)
         {
+            if (!VerifyUser(ref userId))
+            {
+                return Forbid();
+            }
+
             address.UserId = CurrentUser.Id;
 
             _context.Address.Add(address);
@@ -96,16 +142,21 @@ namespace cupcake_api.Controllers
 
         // DELETE: api/Addresses/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAddress(long id)
+        [HttpPost("user/{userId}/{id}")]
+        public async Task<IActionResult> DeleteAddress(string? userId, long id)
         {
-            var user = CurrentUser;
 
+            if (!VerifyUser(ref userId))
+            {
+                return Forbid();
+            }
+           
             var oriAddress = await _context.Address.FindAsync(id);
             if (oriAddress == null)
             {
                 return NotFound();
             }
-            if (oriAddress.UserId != user.Id)
+            if (oriAddress.UserId != userId)
             {
                 return Forbid();
             }
