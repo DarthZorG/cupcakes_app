@@ -5,8 +5,17 @@ using System.Text.Json.Serialization;
 
 namespace cupcake_api.Models
 {
+
     public class Order : BaseModel
     {
+        public enum OrderStatusEnum {
+            CREATED,
+            CANCELED,
+            PAID,
+            SENT,
+            DELIVERED,
+        };
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [SwaggerReadOnly]
         public long Id { get; internal set; }
@@ -26,7 +35,7 @@ namespace cupcake_api.Models
         [ForeignKey(nameof(DeliveryMethodId))]
         public DeliveryMethod? DeliveryMethod { get; set; }
 
-        public string Status { get; set; } = "Created";
+        public OrderStatusEnum Status { get; set; } = OrderStatusEnum.CREATED;
 
         [SwaggerReadOnly]
         public double TotalPrice { get; set; }

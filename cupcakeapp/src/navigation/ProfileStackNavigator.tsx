@@ -12,8 +12,6 @@ import MyAddressesScreen from '../screens/ProfileStack/MyAddressesScreen';
 import EditAddressScreen from '../screens/ProfileStack/EditAddressesScreen';
 import MyProfileScreen from '../screens/ProfileStack/MyProfileScreen';
 import MyFavoritesScreen from '../screens/ProfileStack/MyFavoritesScreen';
-import LoginScreen from '../screens/AuthStack/LoginScreen';
-import RegisterScreen from '../screens/AuthStack/RegisterScreen';
 import {Address} from '../models/Address';
 
 export type ProfileStackParamList = {
@@ -43,8 +41,6 @@ const ProfileStackNavigator = (): JSX.Element => {
       <ProfileStack.Screen name={'EditAddress'} component={EditAddressScreen} />
       <ProfileStack.Screen name={'MyProfile'} component={MyProfileScreen} />
       <ProfileStack.Screen name={'MyFavorites'} component={MyFavoritesScreen} />
-    { /*  <ProfileStack.Screen name={'Login'} component={LoginScreen} />
-      <ProfileStack.Screen name={'Register'} component={RegisterScreen} /> */}
     </ProfileStack.Navigator>
   );
 };

@@ -49,4 +49,20 @@ export default class OrderService extends BaseService {
       validTill: '',
     } as CardDetails;
   }
+
+  static getStatusString(status?: string): string | null {
+    switch (status) {
+      case 'CREATED':
+        return 'criado';
+      case 'CANCELLED':
+        return 'cancelado';
+      case 'PAID':
+        return 'pago';
+      case 'SENT':
+        return 'enviado';
+      case 'DELIVERED':
+        return 'entregue';
+    }
+    return '- desconhecido -';
+  }
 }

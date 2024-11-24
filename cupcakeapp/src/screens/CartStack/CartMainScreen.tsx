@@ -91,8 +91,8 @@ function CartMainScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       {items.length < 1 ? (
-        <View style={styles.emptyCartMessageContainer}>
-          <BoldText style={styles.emptyCartMessage}>
+        <View style={styles.emptyListMessageContainer}>
+          <BoldText style={styles.emptyListMessage}>
             Il tuo carrinho está vazio!
           </BoldText>
           <TouchableOpacity onPress={goToHome}>
@@ -167,14 +167,14 @@ const styles = StyleSheet.create({
   scrollview: {
     backgroundColor: WHITE,
   },
-  emptyCartMessageContainer: {
+  emptyListMessageContainer: {
     flex: 1,
     backgroundColor: WHITE,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  emptyCartMessage: {
+  emptyListMessage: {
     fontSize: 22,
   },
   goHomeMessage: {

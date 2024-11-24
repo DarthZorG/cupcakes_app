@@ -23,7 +23,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../../navigation/ProfileStackNavigator';
 import {BLACK, LIGHT_BLUE, WHITE} from '../../config/colors';
 import MenuItem from '../../components/MenuItem';
-import {BoldText} from '../../components/StyledTexts';
+import {BoldText, DefaultText} from '../../components/StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import PageHeader from '../../components/PageHeader';
 import {useQuery} from '@tanstack/react-query';
@@ -79,35 +79,46 @@ function MyAddressesScreen(props: PropsType): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <PageHeader title="Os Meus Endereços" />
+      {(addresses ?? []).length < 1 ? (
+        <View style={styles.emptyListMessageContainer}>
+          <BoldText style={styles.emptyListMessage}>
+            Nenhum endereço no sistema!
+          </BoldText>
 
-      <FlatList
-        style={styles.scrollview}
-        data={addresses}
-        renderItem={({item}) => {
-          return (
-            <MenuItem
-              title={item.address}
-              description={
-                '' +
-                (item.zipCode ?? '') +
-                ' ' +
-                (item.neighborhood ?? '') +
-                ', ' +
-                (item.city ?? '') +
-                ' ' +
-                (item.state ?? '')
-              }
-              onPress={() => {
-                props.navigation.navigate('EditAddress', {address: item});
-              }}
-            />
-          );
-        }}
-        refreshing={isLoading}
-        onRefresh={() => {
-          refetch();
-        }}
-      />
+          <DefaultText style={styles.goHomeMessage}>
+            Clique no botão adicionar endereço no canto superior direito.
+          </DefaultText>
+        </View>
+      ) : (
+        <FlatList
+          style={styles.scrollview}
+          data={addresses}
+          renderItem={({item}) => {
+            return (
+              <MenuItem
+                title={item.address}
+                description={
+                  '' +
+                  (item.zipCode ?? '') +
+                  ' ' +
+                  (item.neighborhood ?? '') +
+                  ', ' +
+                  (item.city ?? '') +
+                  ' ' +
+                  (item.state ?? '')
+                }
+                onPress={() => {
+                  props.navigation.navigate('EditAddress', {address: item});
+                }}
+              />
+            );
+          }}
+          refreshing={isLoading}
+          onRefresh={() => {
+            refetch();
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -132,6 +143,21 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  emptyListMessageContainer: {
+    flex: 1,
+    backgroundColor: WHITE,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyListMessage: {
+    fontSize: 22,
+  },
+  goHomeMessage: {
+    fontSize: 22,
+    color: BLACK,
+    marginTop: 10,
   },
 });
 

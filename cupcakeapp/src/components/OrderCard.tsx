@@ -15,6 +15,7 @@ import {BoldText, DefaultText} from './StyledTexts';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import CartItemCard from './CartItemCard';
 import {Order} from '../models/Order';
+import OrderService from '../services/OrderService';
 
 export type OrderCardProps = {
   showDetails?: boolean;
@@ -49,7 +50,7 @@ const OrderCard = (props: OrderCardProps): JSX.Element => {
               {'Entrega: ' + (props.order.deliveryMethod?.name ?? '')}
             </DefaultText>
             <DefaultText style={styles.flavor}>
-              {'Status: ' + (props.order.status ?? '')}
+              {'Status: ' + OrderService.getStatusString(props.order.status)}
             </DefaultText>
           </View>
         </View>
