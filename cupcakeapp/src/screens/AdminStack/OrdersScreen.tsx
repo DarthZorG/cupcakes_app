@@ -4,7 +4,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useCallback} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   FlatList,
@@ -29,6 +29,7 @@ import PageHeader from '../../components/PageHeader';
 import OrderService from '../../services/OrderService';
 import {useQuery} from '@tanstack/react-query';
 import OrderCard from '../../components/OrderCard';
+import {useFocusEffect} from '@react-navigation/native';
 
 type PropsType = NativeStackScreenProps<AdminStackParamList, 'Orders'>;
 
@@ -48,6 +49,12 @@ function OrdersScreen(props: PropsType): JSX.Element {
       );
     },
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.container}>

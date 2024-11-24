@@ -163,13 +163,29 @@ function EditOrderScreen(props: PropsType): JSX.Element {
     if (addr != null) {
       return addr.id;
     }
-    const newAddr = await AddressService.addAddress(editingAddress);
+    const newAddr = await AddressService.addAddressForUser(
+      order.userId!,
+      editingAddress,
+    );
     return newAddr.id;
   };
 
   const updateOrder = async () => {
     try {
       dispatch(startLoading());
+      console.log(order);
+      const updatedOrder = {
+        ...order,
+        paymentMethodId: paymentMode?.id ?? -1,
+        deliveryMethodId: deliveryMode?.id ?? -1,
+        status: orderStatus?.value ?? order.status,
+      };
+
+      if (deliveryMode?.requireAddress) {
+        updatedOrder.addressId = await getAddressId();
+      }
+ 
+      await OrderService.updateOrder(updatedOrder);
       dispatch(stopLoading());
       dispatch(
         showAlert('Pedido atualizado!', null, [

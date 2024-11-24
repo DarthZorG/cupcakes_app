@@ -41,6 +41,17 @@ export default class OrderService extends BaseService {
     return await this.handleResponse<Order>(response);
   }
 
+  static async updateOrder(data: Order): Promise<void> {
+    const response = await fetch(API_URL + 'Orders/' + String(data.id), {
+      method: 'PUT',
+      headers: {
+        ...this.getCommonHeaders(AuthorizationHeader.Required),
+      },
+      body: JSON.stringify(data),
+    });
+    return await this.handleResponse<void>(response);
+  }
+
   static getEmptyCardDetails(): CardDetails {
     return {
       holderName: '',

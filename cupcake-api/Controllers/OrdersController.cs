@@ -98,12 +98,16 @@ namespace cupcake_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(long id, Order order)
         {
-            if (id != order.Id)
+            var dbOrder = await _context.Order.FindAsync(id);
+            if (dbOrder == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(order).State = EntityState.Modified;
+            dbOrder.AddressId = order.AddressId;
+            dbOrder.Status = order.Status;
+            dbOrder.PaymentMethodId = order.PaymentMethodId;
+            dbOrder.DeliveryMethodId = order.DeliveryMethodId;
 
             try
             {
