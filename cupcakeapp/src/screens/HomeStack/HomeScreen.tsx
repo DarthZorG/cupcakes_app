@@ -4,7 +4,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   FlatList,
@@ -47,20 +47,27 @@ function HomeScreen(props: PropsType): JSX.Element {
   const favorites = useSelector((state: StoreState): FavoriteCollection => {
     return state.favorites.items;
   });
+  const [filter, setFilter] = useState<string>('');
   const {
     data: products,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['products', filter],
     queryFn: async () => {
-      return await ProductService.getProducts();
+      return await ProductService.getProducts(filter);
     },
   });
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchField placeHolder="O que está procurando?" />
+      <SearchField
+        placeHolder="O que está procurando?"
+        value={filter}
+        onValueChange={text => {
+          setFilter(text);
+        }}
+      />
       <FlatList
         style={styles.scrollview}
         data={products}

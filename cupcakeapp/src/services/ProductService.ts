@@ -3,10 +3,23 @@ import {ErrorResponse, WithRequired} from '../models/GenericAPIResponse';
 import {AuthorizationHeader, BaseService} from './BaseService';
 import {API_URL} from '../config';
 import {Product, ProductListResponse} from '../models/Product';
+import qs from 'qs';
 
 export default class ProductService extends BaseService {
-  static async getProducts(): Promise<ProductListResponse> {
-    const response = await fetch(API_URL + 'Products', {
+  static async getProducts(
+    search?: string,
+    count?: number,
+    offset?: number,
+    adminMode?: boolean,
+  ): Promise<ProductListResponse> {
+    const query = qs.stringify({
+      search,
+      count,
+      offset,
+      adminMode,
+    });
+
+    const response = await fetch(API_URL + 'Products?' + query, {
       method: 'GET',
       headers: {
         ...this.getCommonHeaders(),

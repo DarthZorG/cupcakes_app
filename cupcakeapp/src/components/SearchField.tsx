@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -27,7 +27,12 @@ const SearchField = (props: SearchFieldProps): JSX.Element => {
           value={props.value}
           style={styles.searchField}
           placeholder={props.placeHolder}
-          onChangeText={props.onValueChange}
+          onChangeText={text => {
+            // setValue(text);
+            if (props.onValueChange) {
+              props.onValueChange(text);
+            }
+          }}
           returnKeyType="go"
           testID={props.testID}
           onSubmitEditing={props.onSearch}

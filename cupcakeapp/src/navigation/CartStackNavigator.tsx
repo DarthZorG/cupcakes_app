@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux';
 import {StoreState} from '../store/reducers';
 import CartMainScreen from '../screens/CartStack/CartMainScreen';
 import FinalizeOrderScreen from '../screens/CartStack/FinalizeOrderScreen';
+import AuthStackNavigator from './AuthStackNavigator';
 
 export type CartStackParamList = {
   CartHome: undefined;
@@ -25,7 +26,7 @@ const CartStackNavigator = (): JSX.Element => {
       <CartStack.Screen name={'CartHome'} component={CartMainScreen} />
       <CartStack.Screen
         name={'FinalizeOrder'}
-        component={FinalizeOrderScreen}
+        component={isAuthenticated ? FinalizeOrderScreen : AuthStackNavigator}
       />
     </CartStack.Navigator>
   );

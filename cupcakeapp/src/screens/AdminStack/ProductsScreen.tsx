@@ -72,9 +72,14 @@ function ProductsScreen(props: PropsType): JSX.Element {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['products-admin'],
     queryFn: async () => {
-      return await ProductService.getProducts();
+      return await ProductService.getProducts(
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
     },
   });
 
