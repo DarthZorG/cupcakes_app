@@ -34,7 +34,7 @@ namespace cupcake_api.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                productQ = productQ.Where(e => e.Name.Contains(search));
+                productQ = productQ.Where(e => e.Name.Contains(search) || e.Flavor.Contains(search));
             }
 
             if (count == null)
